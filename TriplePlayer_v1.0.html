@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--************************************************************************************************-->
+<!--******************************************* Triple Player v1.1 *********************************-->
+<!--******************************************* February 29, 2024 ***********************************-->
+<!-- Code by: Bernd Sebastian Kamps -->
+<!-- Revision by: Stephan Kamps -->
+<!-- Description: Triple Player is a web-based tool designed to enhance language learning -->
+<!-- through video content, allowing simultaneous display of multiple subtitles and integration -->
+<!-- with the Pleco dictionary for immersive learning experiences. -->
+<!--************************************************************************************************-->
+<!-- License: TriplePlayer is released under the MIT License. Free for personal and commercial use, -->
+<!-- as long as proper credit is given. See LICENSE.txt in the project repository for more details. -->
+<!--************************************************************************************************-->
+<!-- Repository: https://github.com/bsk54/TriplePlayer.git -->
+<!-- Documentation: https://2049chinese.com/tripleplayer -->
+<!--************************************************************************************************-->
+<!-- Acknowledgments: Special thanks to all contributors and the open-source community for support and -->
+<!-- contributions to this project. -->
+<!--************************************************************************************************-->
+<!-- Note: TriplePlayer is free and open source. We encourage modifications and sharing, -->
+<!-- but please give proper credit to the original authors and maintain this header. -->
+<!--************************************************************************************************-->
+
+
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<title>TriplePlayer: Triple Video Subtitles and Full Pleco Integration </title>
+
+<style>
+	
+	
+/* Base Video Player Styles */
+#video-player {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+
+
+video {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+}
+	
+	
+#landscape-mode-message {
+    display: none; /* Hidden by default */
+    position: fixed; /* Overlay the message */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75); /* Semi-transparent background */
+    color: white;
+    text-align: center;
+    padding-top: 20%; /* Adjust based on where you want the message to appear */
+    font-size: 20px; /* Large text size */
+    z-index: 100; /* Ensure it's above other content */
+}
+
+
+@media (orientation: portrait) {
+    #landscape-mode-message {
+        display: block; /* Show only in portrait mode */
+    }
+}
+
+
+
+/* *********** Overlay Button Styles ***************/
+#video-player .overlay-btn,
+#speed-btn, #toggleFont-btn, #forward-btn, #pause-btn,
+#abxButton-btn, #rewind-btn, #play-stop-btn, #settingsWindow-btn {
+    position: absolute;
+    right: 1px; /* Align to the right border of the video player */
+	background-color: rgba(255, 255, 0, 0.2); /* Semi-transparent white */
+    color: #101010; /* Ensure text is white */	
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Make the button round */
+    opacity: 0.7; /* Make the button semi-transparent */
+    font-size: 10px; /* Adjust font size for better visibility */
+    width: 60px; /* Adjust button size for consistency */
+    height: 60px; /* Adjust button size for consistency */
+    padding: 0px 10px 0px 10px; /* Adjusted padding for better content positioning */
+    /* line-height: 50px;*/ /* Center the symbol vertically */
+    text-align: right;
+	z-index: 10; /* Ensure buttons are above other content */
+    box-sizing: border-box; /* Ensure padding doesn't affect the size */
+}
+
+#video-player:hover .overlay-btn:hover, #abxButton-btn:hover, :hover, #rewind-btn:hover, #play-stop-btn:hover, #speed-btn:hover, #toggleFont-btn:hover, #forward-btn:hover, #pause-btn:hover, #settingsWindow-btn.hover {
+    opacity: 1; /* Full opacity on hover */
+}
+
+
+/* Specific Button Positioning */
+
+#video-player .overlay-btn {
+    left: 1px; /* Align to the right border of the video player */
+    width: 60px; /* Adjust button size for consistency */
+    height: 60px; /* Adjust button size for consistency */
+	padding: 0px 5px 0px 5px; /* Adjusted padding for better content positioning */
+    text-align: left;
+	    line-height: 20px; /* Center the symbol vertically */
+
+}
+#video-player .overlay-btn { top: 10px; left: 1px; background-color: #00ff00;  } /* Video button */
+#video-player .overlay-btn.srt1 { top: 72px; left: 1px; background-color: #FFA500;  } /* SRT1 button */
+#video-player .overlay-btn.srt2 { top: 134px; left: 1px; background-color: #ffff00; } /* SRT2 button */
+#video-player .overlay-btn.srt3 { top: 196px; left: 1px; background-color: rgba(255, 255, 0, 0.2) } /* SRT3 button */
+
+
+
+#video-player input[type="file"] {
+    display: block;
+    width: 60%; /* Adjust the width as needed */
+    margin: 12px auto; /* Center align and add vertical space */
+    padding: 15px; /* Increase padding for a larger touch area */
+    font-size: 1.2em; /* Increase font size for better readability */
+    cursor: pointer; /* Change cursor to indicate clickable area */
+}
+
+.file-label {
+    position: absolute;
+    top: 10px; /* Adjust this value to position labels at the desired height within the video area */
+    left: 10px; /* Adjust for horizontal positioning */
+    z-index: 100; /* Ensure it appears above the video */
+    background-color: rgba(0, 60, 168, 0.7); /* Semi-transparent background for visibility */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#abxButton-btn {top: 17px; }
+#play-stop-btn {top: 160px; width: 94px; height: 80px;  }
+#speed-btn { top: 29px; right: 65px; }
+#forward-btn { top: 225px; }
+#pause-btn { top: 15px; left: 55px; }
+#rewind-btn { top: 77px; right: 1px; width: 94px; height: 80px; }
+
+#forward-btn { 
+	top: 241px;
+}
+#toggleFont-btn { 
+	top: 263px; 	
+	left: 1px;
+ 	padding: 0px 5px 0px 5px; /* Adjusted padding for better content positioning */
+    text-align: left;
+	line-height: 20px; /* Center the symbol vertically */
+	width: 45px; 		
+	height: 45px;		
+	color: white;
+
+}
+
+
+#video-time {
+font-family: Arial; 
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #e0e0e0;
+    background-color: rgba(173, 216, 230, 0.05);
+    padding: 5px;
+	font-size: 10px; /* Adjust font size for better visibility */
+
+}
+
+
+/* Subtitles Styling */
+.subtitles, .delay.btn {
+    position: absolute;
+    bottom: 100px; /* Distance from the bottom of the video player */
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
+    margin: auto;
+    max-width: calc(100% - 40px); /* Adjust or remove max-width as needed */
+    font-size: 20px; /* Primary subtitle font size */
+}
+
+#subtitles-2 {
+    bottom: 80px; /* Position for second subtitle */
+    font-size: 18px; /* Secondary subtitle font size */
+}
+
+#subtitles-3 {
+    bottom: 145px; /* Position for third subtitle */
+    font-size: 18px; /* Tertiary subtitle font size */
+}
+
+
+
+/* Pleco World Display */
+#pleco-world-display {
+    position: absolute;
+    top: 130px; /* Positioning from the top */
+    left: 70%; /* Positioning from the left */
+    background-color: rgba(255, 255, 0, 0.001); /* Nearly transparent background for visibility */
+    padding: 10px;
+    font-size: 20px; /* Font size for the text */
+    color: #E2E2E2; /* Light grey color for the text */
+}
+
+#pleco-world-display a {
+    text-decoration: none; /* Removes underline from links */
+    color: #E2E2E2; /* Light grey color for the link */
+}
+
+#pleco-world-display a:hover,
+#pleco-world-display a:focus {
+    text-decoration: underline; /* Adds underline on hover/focus for better visibility */
+    color: #FFFFFF; /* White color for the link on hover/focus */
+}
+
+/* Pleco Button Styling */
+.pleco-button {
+    background-color: #fcfcfc; /* Grey background */
+    color: #0066aa; /* Blue text color */
+    border: 1px solid #cccccc; /* Grey border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 3px 6px; /* Padding around the text */
+    font-size: 8px; /* Smaller font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline; /* Inline display */
+}
+
+.pleco-button:hover {
+    background-color: #0060a8; /* Darker grey background on hover */
+    color: #ffffff; /* White text color on hover */
+}
+
+
+.delay-btn {
+    position: absolute;
+	    top: 10px; /* Align with your subtitle buttons */
+
+	background-color: rgba(255, 255, 0, 0.2); /* Semi-transparent white */
+    color: #101010; /* Ensure text is white */	
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Make the button round */
+    opacity: 0.7; /* Make the button semi-transparent */
+    font-size: 10px; /* Adjust font size for better visibility */
+    width: 30px; /* Adjust button size for consistency */
+    height: 30px; /* Adjust button size for consistency */
+    padding: 0px 10px 0px 10px; /* Adjusted padding for better content positioning */
+    /* line-height: 50px;*/ /* Center the symbol vertically */
+    text-align: right;
+	z-index: 10; /* Ensure buttons are above other content */
+    box-sizing: border-box; /* Ensure padding doesn't affect the size */
+	
+    position: absolute;
+
+
+}
+
+#delay-minus, #delay-reset, #delay-plus {
+    left: 80px /* Positioned below SRT3 */
+}
+
+#delay-reset {
+    left: 120px; /* Positioned below D- */
+}
+
+#delay-plus {
+    left: 160px; /* Positioned below D0 */
+}
+
+
+</style>
+</head>
+
+<body>
+<div id="landscape-mode-message">
+    Please turn your device to landscape mode for the best experience.
+</div>
+
+
+<div id="video-player" style="position: relative;">
+	<div id="load-instruction" style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 50%; height: 50%; background-color: rgba(0,0,0,0.7); color: white; font-size: 16px; display: flex; justify-content: center; align-items: center; text-align: center; z-index: 20; pointer-events: none;">
+	<p style="font-size: 14px; padding:40px ">Load a video ("Video" button) and subtitles ("SRT1" & "SRT2" and optionally "SRT3"), then use the right side buttons for focused listening and reading.</p>
+	</div>
+
+
+    <video id="video" controls playsinline webkit-playsinline>
+        Your browser does not support HTML5 video.
+    </video>
+
+	
+
+    <!-- Overlay Buttons -->
+    <button id="video-btn" class="overlay-btn" onclick="document.getElementById('video-file').click();">Video</button>
+    <input type="file" id="video-file" accept="video/*" style="display:none;">
+
+    <button id="srt1-btn" class="overlay-btn srt1" onclick="document.getElementById('srt-file').click();">SRT1</button>
+    <input type="file" id="srt-file" accept=".srt" style="display:none;">
+
+    <button id="srt2-btn" class="overlay-btn srt2" onclick="document.getElementById('srt-file-2').click();">SRT2</button>
+    <input type="file" id="srt-file-2" accept=".srt" style="display:none;">
+
+    <button id="srt3-btn" class="overlay-btn srt3" onclick="document.getElementById('srt-file-3').click();">SRT3</button>
+	<input type="file" id="srt-file-3" accept=".srt" style="display:none;">
+	
+
+	<div id="copyright-notice" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); padding: 6px; font-family: Arial; color: #e0e0e0; text-align: center; z-index: 10; font-size: 10px; background-color: rgba(173, 216, 230, 0.05);">
+		TriplePlayer | Copyright 2024: <a href="https://bsk1.com" target="bsk" style="text-decoration: none; color: lightblue;">BSK</a>
+	</div>
+
+
+
+    <div id="video-time" style="position: absolute; top: 20; left: 50%; transform: translateX(-50%); padding: 5px;">00:00:00</div>
+		
+
+    <div id="subtitles"   class="subtitles"></div>
+    <div id="subtitles-2" class="subtitles"></div>
+	<div id="subtitles-3" class="subtitles"></div>
+	
+	<button id="speed-btn">1.0</button> 
+	<button id="abxButton-btn">A</button> 
+	<button id="rewind-btn">&lt;3s</button> 
+	<button id="play-stop-btn">Play</button> 
+	<button id="forward-btn">3s&gt;</button> 
+	<button id="toggleFont-btn">20px</button> 
+
+	<!-- Subtitle Delay Adjustment Buttons -->
+
+    <button id="delay-minus" class="delay-btn">D-</button>
+    <button id="delay-reset" class="delay-btn">D0</button>
+    <button id="delay-plus" class="delay-btn">D+</button>
+	<div id="delay-display" style="position: absolute; top: 50px; left: 80px; font-family: Arial; color: #e0e0e0;  font-size: 10px;"></div>
+
+	<div id="pleco-world-display" class="subtitles"></div>
+
+</div>
+
+<!-- ***************************************************** JavaScript ******************************************************* -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+   
+    // ----------------------------------------------------------- DIV ---------------------------------------
+    const video = document.getElementById('video');
+    const videoTime = document.getElementById('video-time');
+    const subtitlesDiv1 = document.getElementById('subtitles');
+    const subtitlesDiv2 = document.getElementById('subtitles-2');
+    const subtitlesDiv3 = document.getElementById('subtitles-3');
+    const instructionsDiv = document.getElementById('load-instruction');
+//HERE
+    const delayDiv = document.getElementById('delay-display');
+//HERE;
+    const PlecoButtonDisplay = document.getElementById('pleco-world-display'); // Reference to the new container
+    
+    
+    
+    // ----------------------------------------------------------- FILES ---------------------------------------
+    const videoFile = document.getElementById('video-file'); 
+    const srt1File = document.getElementById('srt-file'); 
+    const srt2File = document.getElementById('srt-file-2'); 
+    const srt3File = document.getElementById('srt-file-3'); 
+    
+    
+    // ----------------------------------------------------------- BUTTON ---------------------------------------
+    const videoBtn = document.getElementById("video-btn");
+    const srt1Btn = document.getElementById("srt1-btn");
+    const srt2Btn = document.getElementById("srt2-btn");
+    const srt3Btn = document.getElementById("srt3-btn");
+	const toggleFont = document.getElementById("toggleFont-btn");
+	
+	
+    
+    const speedBtn = document.getElementById('speed-btn'); // Adding the speed button
+    const abBtn = document.getElementById('abxButton-btn');
+    const rewindBtn = document.getElementById('rewind-btn');
+    const playPauseBtn = document.getElementById('play-stop-btn');
+    const forwardBtn = document.getElementById('forward-btn');
+    const toggleFontBtn = document.getElementById('toggleFont-btn');
+	
+    const delayPlusBtn = document.getElementById('delay-plus');
+    const delayMinusBtn = document.getElementById('delay-minus');
+    const delayResetBtn = document.getElementById('delay-reset');
+    
+
+    // ----------------------------------------------------------- DIVERSE DEFINITIONS ---------------------------------------
+    const fontSizes = ['20px', '24px', '28px', '34px'];
+    const speeds = [1.0, 0.75, 0.5];
+
+// 0, 255, 0, 0.99
+    const colorChange = "rgba(255, 255, 0, 0.2)";
+    const colorDimButton = "rgba(160, 240, 176, 0.2)";
+    
+    
+    // ----------------------------------------------------------- START ---------------------------------------
+    let currentFontSizeIndex = 0;
+    toggleFontBtn.textContent = fontSizes[currentFontSizeIndex];
+    
+    let currentSpeedIndex = 0;
+    speedBtn.textContent = speeds[currentSpeedIndex].toFixed(2);
+
+     // Initialize AB points and state variables
+    let firstABClick = true;
+    let aPoint = 0, bPoint = 0;
+    let abLoop = false;
+    let abStage = 0; // 0: Set A, 1: Set B, 2: Looping
+    abBtn.textContent = 'Set A';
+	
+    let subtitleDelay = 0; // Delay in seconds
+    
+
+// HERE
+    // HIDE all button with no function on start
+    toggleFontBtn.style.display = 'none';
+    
+    delayPlusBtn.style.display = 'none';
+    delayMinusBtn.style.display = 'none';
+    delayResetBtn.style.display = 'none';
+    delayDiv.style.display = 'none';
+
+    rewindBtn.style.display = 'none';
+    playPauseBtn.style.display = 'none';
+    abBtn.style.display = 'none';
+    speedBtn.style.display = 'none';
+    forwardBtn.style.display = 'none';
+// HERE;
+    
+    // ----------------------------------------------------------- LISTENER ---------------------------------------
+    // einmal für alle Tasten registriert
+    document.addEventListener('keydown', function(event) {
+      if (['f', 'j', '4'].includes(event.key)) {
+          rewindBtn.click(); 
+      
+      } else if (['r', 'u', '7'].includes(event.key)) {
+          forwardBtn.click();
+          
+      } else if (['g', 'h', '0'].includes(event.key)) {
+          videoBtn.click(); 
+          
+      } else if (['v', 'n', '1'].includes(event.key)) {
+          srt1Btn.click(); 
+          
+      } else if (['c', 'm', '2'].includes(event.key)) {
+          srt2Btn.click(); 
+          
+      } else if (['x', ';', '3'].includes(event.key)) {
+          srt3Btn.click(); 
+          
+      } else if (['w', 'o', '9'].includes(event.key)) {
+          toggleFontBtn.click(); 
+          
+      } else if (['e', 'i', '8'].includes(event.key)) {
+          speedBtn.click(); 
+          
+      }  else if (['s', 'l', '6'].includes(event.key)) {
+          playPauseBtn.click(); 
+          
+      }  else if (['d', 'k', '5'].includes(event.key)) {
+          abBtn.click(); 
+          
+      }
+      
+    }); // ('keydown', function(event)
+    
+    
+    
+    // VIDEO-FILE
+    // set value allways to "", otherwise change will not be fired if you come back from other site
+    videoFile.addEventListener('click', function() {
+      videoFile.value = "";
+    });
+
+    videoFile.addEventListener('change', function() {
+      if (this.files.length > 0) {
+        video.src = URL.createObjectURL(this.files[0]);
+        video.play();
+        
+        // play the last played video -> jump to saved position; otherwise save the new video-filename
+        if (localStorage.lsFileName === this.files[0].name) {
+          video.currentTime = localStorage.lsLastPosition;
+        } else {
+          localStorage.lsFileName = this.files[0].name;
+        }
+
+        videoBtn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+        videoBtn.style.color = 'white'; // Change text color to white
+    
+// HERE
+        rewindBtn.style.display = '';
+        playPauseBtn.style.display = '';
+        abBtn.style.display = '';
+        speedBtn.style.display = '';
+        forwardBtn.style.display = '';
+// HERE;
+    
+        // Change the color of the buttons to red
+        rewindBtn.style.backgroundColor = "rgb(255, 96, 101)";
+		forwardBtn.style.backgroundColor = "rgb(255, 96, 101)";
+        playPauseBtn.style.backgroundColor = "rgb(255, 96, 101)";
+        abBtn.style.backgroundColor = "rgb(255, 96, 101)";
+        speedBtn.style.backgroundColor = "rgb(255, 96, 101)"; // Apply the color change to the speed button as well
+ 
+        // hide the instructions
+        instructionsDiv.style.display = 'none';
+      }
+    }); // videoFile.addEventListener  CHANGE
+    
+    
+    
+    // SRT1-FILE
+    srt1File.addEventListener('change', function() {
+      // False or omission of the third parameter defaults to standard handling.
+      if (this.files.length > 0) {
+        // true -> show and connect plecoButton with this subtitle
+        loadAndDisplaySRTFile(this.files[0], subtitlesDiv1, true);
+       
+//HERE
+        toggleFontBtn.style.display = '';
+        delayPlusBtn.style.display = '';
+        delayMinusBtn.style.display = '';
+        delayResetBtn.style.display = '';
+        delayDiv.style.display = '';
+//HERE;
+
+        
+        srt1Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+        srt1Btn.style.color = 'white'; // Change text color to white
+      }
+    }); // srt1File.addEventListener CHANGE
+    
+
+    // SRT2-FILE
+    srt2File.addEventListener('change', function() {
+      // False or omission of the third parameter defaults to standard handling.
+      if (this.files.length > 0) {
+       loadAndDisplaySRTFile(this.files[0], subtitlesDiv2);
+        srt2Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+        srt2Btn.style.color = 'white'; // Change text color to white
+      }
+    }); // srt2File.addEventListener CHANGE
+    
+    
+    // SRT3-FILE
+    srt3File.addEventListener('change', function(e) {
+      // False or omission of the third parameter defaults to standard handling.
+      if (this.files.length > 0) {
+        loadAndDisplaySRTFile(this.files[0], subtitlesDiv3);
+        srt3Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+        srt3Btn.style.color = 'white'; // Change text color to white
+      }
+    }); // srt3File.addEventListener CHANGE
+    
+   
+   
+   
+    //AB-BUTTON
+    abBtn.addEventListener('click', function() {
+      if (abStage === 0) { // Setting point A
+          aPoint = video.currentTime;
+          abBtn.textContent = 'Set B';
+          abStage = 1;
+          
+          // start video if pausing          
+          if (video.paused) {
+            playPauseBtn.click();          
+          }          
+          
+      } else if (abStage === 1) { // Setting point B and starting loop
+          bPoint = video.currentTime;
+          if (bPoint > aPoint) { // Ensure B is after A
+              abLoop = true;
+              abBtn.textContent = 'Exit';
+              abStage = 2;
+              
+              // Setup looping by checking video time update
+              video.loopFunction = function() {
+                  if (video.currentTime >= bPoint && abLoop) {
+                      video.currentTime = aPoint;
+                      video.play(); // Ensure video plays if it was paused at B
+                  }
+              };
+              video.addEventListener('timeupdate', video.loopFunction);
+              
+          } else {
+              // If B is not after A, reset to setting A
+              alert("Point B must be after Point A.");
+              abStage = 0; // Reset to allow setting A again
+              abBtn.textContent = 'Set A';
+          } // if (bPoint > aPoint)
+          
+      } else { // Stopping the loop
+          abLoop = false;
+          abStage = 0;
+          abBtn.textContent = 'Set A';
+          video.removeEventListener('timeupdate', video.loopFunction);
+      }
+      
+      if (firstABClick) {
+        firstABClick = false;
+        changeButtonColor(this);
+        dimButtonColor(srt1Btn);
+        dimButtonColor(srt2Btn);
+        dimButtonColor(srt3Btn);
+        dimButtonColor(toggleFont);
+//		dimButtonColor(settingsWindow);
+
+		
+      }
+      
+    }); // abBtn.addEventListener  CLICK
+   
+   
+    
+    //PLAYPAUSE-BUTTON
+    playPauseBtn.addEventListener('click', function() {
+      changeButtonColor(this);
+      if (video.paused || video.ended) {
+            video.play();
+      } else {
+            video.pause();
+      }        
+    }); //  playPauseBtn.addEventListener  CLICK
+    
+
+    
+    // REWIND-BUTTON
+    rewindBtn.addEventListener('click', function() {
+      changeButtonColor(this);
+      video.currentTime = Math.max(0, video.currentTime - 3); // Rewind 3 seconds or to start
+    }); // rewindBtn.addEventListener  CLICK
+     
+     
+     
+    // FORWARD-BUTTON
+    forwardBtn.addEventListener('click', function() {
+      changeButtonColor(this);
+      const newTime = Math.min(video.duration, video.currentTime + 3); // Advance 3 seconds or to the end
+      video.currentTime = newTime;    
+    }); // forwardBtn.addEventListener  CLICK
+     
+
+       
+	  // TOGGLEFONT-BUTTON
+    toggleFontBtn.addEventListener('click', function() {
+        // Increment the currentFontSizeIndex, cycling back to 0 if at the end of the array
+        currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+        // Update the font size of subtitle 1
+        subtitlesDiv1.style.fontSize = fontSizes[currentFontSizeIndex];
+        // Update the button's text to show the new font size
+        toggleFontBtn.textContent = fontSizes[currentFontSizeIndex];
+    }); // toggleFontBtn.addEventListener CLICK
+  
+
+  
+    // SPEED-BUTTON
+    speedBtn.addEventListener('click', function() {
+      changeButtonColor(this);
+      // Increment the currentSpeedIndex, cycling back to 0 if at the end of the array
+      currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+      // Update the video playback rate
+      video.playbackRate = speeds[currentSpeedIndex];
+      // Update the button label to show the current speed
+      speedBtn.textContent = speeds[currentSpeedIndex].toFixed(2);        
+    }); // speedBtn.addEventListener  CLICK    
+    
+      
+      
+      
+    // DELAYPLUSBUTTON  
+    delayPlusBtn.addEventListener('click', function() {
+        subtitleDelay += 0.2; // Increase delay
+        updateDelayDisplay();
+    });
+
+
+    
+    // DELAYMINUSBUTTON  
+    delayMinusBtn.addEventListener('click', function() {
+        subtitleDelay -= 0.2; // Decrease delay
+        updateDelayDisplay();
+    });
+
+    
+    
+    // DELAYRESETBUTTON  
+    delayResetBtn.addEventListener('click', function() {
+        subtitleDelay = 0; // Reset delay to 0
+        updateDelayDisplay();
+    });
+          
+      
+  
+    // VIDEO
+    // Display videotime
+    video.addEventListener('timeupdate', function() {
+        videoTime.textContent = formatTime(video.currentTime);
+    });
+    
+    // Clear instruction
+    video.addEventListener('click', function() {
+        // Hide the instruction message
+        document.getElementById('load-instruction').style.display = 'none';
+    });
+    
+    // update text playPauseButton play/pause
+    video.addEventListener('pause', function() {
+        playPauseBtn.textContent = 'Play';
+    });
+    
+    
+    // update text playPauseButton play/pause
+    video.addEventListener('play', function() {
+        playPauseBtn.textContent = 'Pause';
+    });
+    
+    
+    
+    // WINDOW
+    // save the current position of the video if the user is going to leave this page
+    window.addEventListener('beforeunload', function() {
+      if (video.src && video.currentTime > 0)
+        localStorage.lsLastPosition = video.currentTime;
+    });
+
+    
+    
+  // ----------------------------------------------------------- FUNCTIONS ---------------------------------------
+ 
+    function loadAndDisplaySRTFile(file, subtitlesDiv, showPlecoBtn = false) {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          // Parse the SRT content. Adjusted to always pass isFile1, defaulting to false if not provided.
+          const subtitles = parseSRT(e.target.result);
+          // Display subtitles. If isFile1 is true, PlecoButtonDisplay is also updated, otherwise it's not.
+          displaySubtitles(video, subtitles, subtitlesDiv, showPlecoBtn ? PlecoButtonDisplay : undefined);
+        };
+        reader.readAsText(file);
+      }
+      
+    } // function loadAndDisplaySRTFile
+    
+    
+
+    function parseSRT(srt) {
+      const pattern = /(\d+)\s+(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})\s+([\s\S]*?)(?=\n\n|\r\n\r\n|\n\d|\r\n\d|$)/g;
+      const subtitles = [];
+      let match;
+      while ((match = pattern.exec(srt)) !== null) {
+        let text = match[4].replace(/\n/g, '<br>');
+        subtitles.push({
+          start: timeToSeconds(match[2]),
+          end: timeToSeconds(match[3]),
+          text: text
+        });
+      }
+      return subtitles;
+    
+    } // function parseSRT
+
+    
+
+    function displaySubtitles(video, subtitles, container, PlecoButtonContainer = null) {
+        video.addEventListener('timeupdate', function() {
+            const currentTime = video.currentTime + subtitleDelay; // Add delay to current time
+            const subtitle = subtitles.find(s => currentTime >= s.start && currentTime < s.end);
+            container.innerHTML = subtitle ? subtitle.text : '';
+
+            if (PlecoButtonContainer && container === subtitlesDiv1 && subtitle) {
+                PlecoButtonContainer.innerHTML = generatePlecoButton(subtitle.text);
+            }
+        });
+    } // function displaySubtitles
+
+
+
+    function updateDelayDisplay() {
+        const displayText = subtitleDelay !== 0 ? `Delay: ${subtitleDelay.toFixed(1)}s` : '';
+      //  document.getElementById('delay-display').textContent = displayText;
+        delayDiv.textContent = displayText;
+    }
+
+
+    
+    function timeToSeconds(time) {
+        const [hours, minutes, seconds] = time.split(':');
+        return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds.replace(',', '.'));
+    } //  function timeToSeconds
+
+    
+
+    function formatTime(seconds) {
+      const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+      const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    } // function formatTime(seconds)
+    
+    
+    
+    // Function dim button color
+    function dimButtonColor(button) {
+      //  button.style.backgroundColor = "rgba(160, 240, 176, 0.2)";
+        button.style.backgroundColor = colorDimButton;
+        button.style.color = 'white';
+    }
+    
+   
+    
+    // Function to change button color
+    function changeButtonColor(button) {
+      //  button.style.backgroundColor = "rgba(255, 255, 0, 0.2)";
+        button.style.backgroundColor = colorChange;
+    }
+
+    
+
+    function generatePlecoButton(subtitleText) {
+      return `<form action="plecoapi://x-callback-url/s" method="get">
+            <input type="hidden" name="q" value="${subtitleText}">
+            <input type="submit" value="P" class="pleco-button">
+          </form>`;
+    }
+
+
+
+
+
+
+
+    
+}); // document.addEventListener('DOMContentLoaded', function() 
+  
+</script>
+
+</body>
+</html>
