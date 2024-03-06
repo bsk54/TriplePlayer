@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--************************************************************************************************-->
+<!--******************************************* Triple Player v1.3 *********************************-->
+<!--******************************************* March 6, 2024 **************************************-->
+<!---------------------------------------------------------------------------------------------------->
+<!------------------------------------ Code by: Bernd Sebastian Kamps -------------------------------->
+<!---------------------------------------------------------------------------------------------------->
+<!-- Description: Triple Player is a web-based tool designed to enhance language learning -->
+<!-- through video content, allowing simultaneous display of multiple subtitles and integration -->
+<!-- with the Pleco dictionary for immersive learning experiences. -->
+<!--************************************************************************************************-->
+<!-- License: TriplePlayer is released under the MIT License. Free for personal and commercial use, -->
+<!-- as long as proper credit is given. See LICENSE.txt in the project repository for more details. -->
+<!--************************************************************************************************-->
+<!-- Repository: https://github.com/bsk54/TriplePlayer.git -->
+<!-- Documentation: https://2049chinese.com/tripleplayer -->
+<!--************************************************************************************************-->
+<!-- Acknowledgments: Special thanks to all contributors and the open-source community for support and -->
+<!-- contributions to this project. -->
+<!--************************************************************************************************-->
+<!-- Note: TriplePlayer is free and open source. We encourage modifications and sharing, -->
+<!-- but please give proper credit to the original authors and maintain this header. -->
+<!--************************************************************************************************-->
+
+
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<title>TriplePlayer: Triple Video Subtitles and Full Pleco Integration </title>
+
+<style>
+	
+:root {
+    --y: 7px; /* Define a CSS variable '--y' with a value */
+}	
+
+.right-buttons {
+    bottom: var(--y); /* Use the CSS variable for positioning */
+}
+	
+/* Base Video Player Styles */
+#video-player {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+
+
+h3 {
+    font-size: 14px; /* Tertiary subtitle font size */
+}
+
+p {
+    font-size: 12px; /* Tertiary subtitle font size */
+}
+
+
+video {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+}
+	
+	
+#landscape-mode-message {
+    display: none; /* Hidden by default */
+    position: fixed; /* Overlay the message */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.99); /* Semi-transparent black background */
+    color: white;
+    text-align: center;
+    padding-top: 20px; /* Adjust if needed for text alignment */
+    font-size: 20px; /* Large text size */
+    z-index: 100; /* Ensure it's above other content */
+}
+
+@media (orientation: portrait) {
+    #landscape-mode-message {
+        display: block; /* Show only in portrait mode */
+    }
+}
+
+
+#load-instruction {
+    position: absolute;
+    top: 15%;
+    left: 110px; /* Set the element 123px from the left screen border */
+    /* Remove or adjust the transform property as it centers the element, which might not be needed here */
+    width: 40%;
+    height: auto;
+    background-color: #f8f8f8; /* Grey background */
+    color: #404040; /* Dark grey text color for readability */
+    font-size: 16px;
+    text-align: left;
+    z-index: 20;
+    padding: 17px;
+    pointer-events: none;
+    border-radius: 10px; /* Rounded corners for aesthetics */
+}
+
+
+
+
+
+#load-instruction > p {
+    font-size: 14px;
+    padding: 0px;
+    margin: 0; /* Ensure paragraphs have no extra spacing that could suggest column-like separation */
+	    margin-top: 10px; /* Adjusted to reduce space between paragraphs */
+    margin-bottom: 10px; /* Adjusted to reduce space between paragraphs */
+}
+
+
+
+/* *********** Overlay Button Styles ***************/
+#video-player .overlay-btn,
+#speed-btn, #toggleFont-btn, #forward-btn, #pause-btn,
+#abxButton-btn, #rewind-btn, #play-stop-btn, #settingsWindow-btn, #micro-btn  {
+    position: absolute;
+    right: 3px; /* Align to the right border of the video player */
+	background-color: rgba(255, 255, 0, 0.2); /* Semi-transparent white */
+    color: #404040; /* Ensure text is white */	
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Make the button round */
+    opacity: 0.7; /* Make the button semi-transparent */
+    font-size: 10px; /* Adjust font size for better visibility */
+    width: 60px; /* Adjust button size for consistency */
+    height: 60px; /* Adjust button size for consistency */
+    padding: 0px 10px 0px 10px; /* Adjusted padding for better content positioning */
+    /* line-height: 50px;*/ /* Center the symbol vertically */
+    text-align: right;
+	z-index: 10; /* Ensure buttons are above other content */
+    box-sizing: border-box; /* Ensure padding doesn't affect the size */
+}
+
+#video-player:hover .overlay-btn:hover, #abxButton-btn:hover, :hover, #rewind-btn:hover, #play-stop-btn:hover, #speed-btn:hover, #toggleFont-btn:hover, #forward-btn:hover, #pause-btn:hover, #settingsWindow-btn.hover, #micro-btn.hover {
+    opacity: 1; /* Full opacity on hover */
+}
+
+
+/* Specific Button Positioning */
+
+#video-player .overlay-btn {
+    left: 1px; /* Align to the right border of the video player */
+    width: 60px; /* Adjust button size for consistency */
+    height: 60px; /* Adjust button size for consistency */
+	padding: 0px 5px 0px 5px; /* Adjusted padding for better content positioning */
+    text-align: left;
+	    line-height: 20px; /* Center the symbol vertically */
+
+}
+#video-player .overlay-btn { top: calc(var(--y) + 0px); left: 1px; background-color: #00ff00;  } /* Video button */
+#video-player .overlay-btn.srt1 { top: calc(var(--y) + 65px); left: 1px; background-color: #FFA500;  } /* SRT1 button */
+#video-player .overlay-btn.srt2 { top: calc(var(--y) + 130px); left: 1px; background-color: #ffff00; } /* SRT2 button */
+#video-player .overlay-btn.srt3 { top: calc(var(--y) + 194px); left: 1px; background-color: rgba(255, 255, 0, 0.2) } /* SRT3 button */
+
+
+
+#video-player input[type="file"] {
+    display: block;
+    width: 60%; /* Adjust the width as needed */
+    margin: 12px auto; /* Center align and add vertical space */
+    padding: 15px; /* Increase padding for a larger touch area */
+    font-size: 1.2em; /* Increase font size for better readability */
+    cursor: pointer; /* Change cursor to indicate clickable area */
+}
+
+.file-label {
+    position: absolute;
+    top: 10px; /* Adjust this value to position labels at the desired height within the video area */
+    left: 10px; /* Adjust for horizontal positioning */
+    z-index: 100; /* Ensure it appears above the video */
+    background-color: rgba(0, 60, 168, 0.7); /* Semi-transparent background for visibility */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#micro-btn { top: calc(var(--y) + 0px);  right: 100px; height: 47px}
+#abxButton-btn { top: calc(var(--y) + 0px);   width: 94px; height: 80px; }
+#speed-btn     { top: calc(var(--y) + 53px);  right: 88px; }
+#rewind-btn    { top: calc(var(--y) + 85px);  width: 94px; height: 80px; }
+#play-stop-btn { top: calc(var(--y) + 169px); width: 94px; height: 80px;  }
+#forward-btn   { top: calc(var(--y) + 251px); }
+// #pause-btn  { top: 15px; left: 55px; }
+
+
+
+
+#toggleFont-btn { 
+	top: -263px; 	
+	left: 1px;
+ 	padding: 0px 5px 0px 5px; /* Adjusted padding for better content positioning */
+    text-align: left;
+	line-height: 20px; /* Center the symbol vertically */
+	width: 45px; 		
+	height: 45px;		
+	color: white;
+}
+
+
+#video-time {
+font-family: Arial; 
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #e0e0e0;
+    background-color: rgba(173, 216, 230, 0.05);
+    padding: 5px;
+	font-size: 10px; /* Adjust font size for better visibility */
+
+}
+
+
+/* Subtitles Styling */
+.subtitles, .delay.btn {
+    position: absolute;
+    bottom: 120px; /* Distance from the bottom of the video player */
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
+    margin: auto;
+    max-width: calc(100% - 40px); /* Adjust or remove max-width as needed */
+    font-size: 16px; /* Primary subtitle font size */
+}
+
+#subtitles-2 {
+    bottom: 100px; /* Position for second subtitle */
+    font-size: 16px; /* Secondary subtitle font size */
+}
+
+#subtitles-3 {
+    bottom: 80px; /* Position for third subtitle */
+    font-size: 16px; /* Tertiary subtitle font size */
+}
+
+
+
+/* Pleco World Display */
+#pleco-world-display {
+    position: absolute;
+    top: calc(var(--y) + 142px); /* Positioning from the top */
+    left: 68%; /* Positioning from the left */
+    background-color: rgba(255, 255, 0, 0.001); /* Nearly transparent background for visibility */
+    padding: 10px;
+    font-size: 20px; /* Font size for the text */
+    color: #E2E2E2; /* Light grey color for the text */
+}
+
+#pleco-world-display a {
+    text-decoration: none; /* Removes underline from links */
+    color: #E2E2E2; /* Light grey color for the link */
+}
+
+#pleco-world-display a:hover,
+#pleco-world-display a:focus {
+    text-decoration: underline; /* Adds underline on hover/focus for better visibility */
+    color: #FFFFFF; /* White color for the link on hover/focus */
+}
+
+/* Pleco Button Styling */
+.pleco-button {
+    background-color: #fcfcfc; /* Grey background */
+    color: #0066aa; /* Blue text color */
+    border: 1px solid #cccccc; /* Grey border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 3px 6px; /* Padding around the text */
+    font-size: 8px; /* Smaller font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline; /* Inline display */
+}
+
+.pleco-button:hover {
+    background-color: #0060a8; /* Darker grey background on hover */
+    color: #ffffff; /* White text color on hover */
+}
+
+
+
+
+.delay-btn {
+    position: absolute;
+	    top: 10px; /* Align with your subtitle buttons */
+
+	background-color: rgba(255, 255, 0, 0.2); /* Semi-transparent white */
+    color: #101010; /* Ensure text is white */	
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Make the button round */
+    opacity: 0.7; /* Make the button semi-transparent */
+    font-size: 10px; /* Adjust font size for better visibility */
+    width: 30px; /* Adjust button size for consistency */
+    height: 30px; /* Adjust button size for consistency */
+    padding: 0px 10px 0px 10px; /* Adjusted padding for better content positioning */
+    /* line-height: 50px;*/ /* Center the symbol vertically */
+    text-align: right;
+	z-index: 10; /* Ensure buttons are above other content */
+    box-sizing: border-box; /* Ensure padding doesn't affect the size */
+	
+    position: absolute;
+
+
+}
+
+#delay-minus, #delay-reset, #delay-plus {
+    left: 80px /* Positioned below SRT3 */
+}
+
+#delay-reset {
+    left: 120px; /* Positioned below D- */
+}
+
+#delay-plus {
+    left: 160px; /* Positioned below D0 */
+}
+
+
+
+#buttonContainer {
+    display: flex;
+    justify-content: left; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically (if needed) */
+	padding: 0;
+    // padding: 10px 0px 40px 0px; /* Add padding around the container */
+}
+.changeValue-btn {
+    background-color: rgba(255, 255, 0, 0.5);
+    color: #404040;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    opacity: 0.7;
+    font-size: 10px;
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    margin: 10px 5px; /* Adds space between buttons */
+    z-index: 10;
+
+}
+
+#changeValue-minus { left: 20px; }
+#changeValue-reset { left: 40px; }
+#changeValue-plus { left: 60px; }
+
+.changeValue-btn:hover {
+    background-color: rgba(255, 255, 0, 0.7); /* Lighter green on hover for feedback */
+}
+
+
+
+
+#settingsWindow-btn { 
+    top: calc(var(--y) + 257px); /* Added 'px' to specify units */
+    left: 1px;
+    padding: 0px 5px 0px 5px; /* Adjusted padding for better content positioning */
+    text-align: left;
+    line-height: 20px; /* Center the symbol vertically */
+    position: absolute; /* Ensure this is explicitly set if needed */
+    z-index: 10; /* Ensure it's above the video layer if necessary */
+    // color: white;
+
+}
+
+#settingsWindow {
+    font-family: Arial; 
+    position: absolute; /* Change to fixed if you want it always relative to the viewport */
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: auto; /* Adjust height based on content */
+    background-color: #f8f8f8; /* Light grey background */
+    z-index: 100; /* Ensure it's above other content */
+    display: none; /* Hidden by default */
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better visibility */
+    border-radius: 10px; /* Rounded corners; adjust as needed */
+}
+
+
+
+#close-settingsWindow {
+	font-family: Arial; 
+    background-color: #ffffff; /* Red background for emphasis */
+    color: #404040; /* White text color for contrast */
+    border: none; /* Remove default border */
+    border-radius: 20px; /* Rounded corners */
+    padding: 5px 10px; /* Adequate padding for a larger click area */
+    // font-weight: bold; /* Bold text for visibility */
+    cursor: pointer; /* Cursor changes to pointer to indicate clickable */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    outline: none; /* Remove outline to focus on style */
+    margin-top: 25px; /* Space from the content above */
+	    font-size: 10px; /* Adjust font size for better visibility */
+
+}
+
+#close-settingsWindow:hover {
+    background-color: #eeeeee; /* Lighter red on hover for feedback */
+}
+
+#close-settingsWindow:focus {
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.5); /* Focus indicator for accessibility */
+}
+
+</style>
+</head>
+
+<body>
+<div id="landscape-mode-message">
+
+<img width="100%" src="data:image/jpeg;base64,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";>
+
+    <!--p style="padding: 5% 20% 10px 20%; font-size:24px">TriplePlayer</p-->
+	<p style="padding: 30px 20% 30px 20%; font-size:16px">Please turn your device to landscape mode for the best experience.</p>
+</div>
+
+
+<div id="video-player" style="position: relative;">
+	<div id="load-instruction">
+		<p>1. Load a video using the "Video" button. </p>
+		<p>2. Load one to three subtitle files ("SRT1," "SRT2," and/or "SRT3").</p>
+		<p>3. Click the 'Settings' button to adjust the font sizes and positions of the subtitles to your convenience.</p>
+		<p>4. Use the buttons on the right side for focused listening and reading.</p>
+	</div>
+
+
+    <video id="video" controls playsinline webkit-playsinline>
+        Your browser does not support HTML5 video.
+    </video>
+
+	
+
+    <!-- Overlay Buttons -->
+    <button id="video-btn" class="overlay-btn" onclick="document.getElementById('video-file').click();">Video</button>
+    <input type="file" id="video-file" accept="video/*" style="display:none;">
+	
+    <button id="srt1-btn" class="overlay-btn srt1" onclick="document.getElementById('srt-file').click();">SRT1</button>
+    <input type="file" id="srt-file" accept=".srt" style="display:none;">
+
+    <button id="srt2-btn" class="overlay-btn srt2" onclick="document.getElementById('srt-file-2').click();">SRT2</button>
+    <input type="file" id="srt-file-2" accept=".srt" style="display:none;">
+
+    <button id="srt3-btn" class="overlay-btn srt3" onclick="document.getElementById('srt-file-3').click();">SRT3</button>
+	<input type="file" id="srt-file-3" accept=".srt" style="display:none;">
+	
+
+	<div id="copyright-notice" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); padding: 6px; font-family: Arial; color: #e0e0e0; text-align: center; z-index: 10; font-size: 10px; background-color: rgba(173, 216, 230, 0.05);">
+		TriplePlayer 1.3 | Copyright 2024: <a href="https://bsk1.com" target="bsk" style="text-decoration: none; color: lightblue;">BSK</a>
+	</div>
+
+
+
+    <div id="video-time" style="position: absolute; top: 20; left: 50%; transform: translateX(-50%); padding: 5px;">00:00:00</div>
+		
+
+    <div id="subtitles"   class="subtitles"></div>
+    <div id="subtitles-2" class="subtitles"></div>
+	<div id="subtitles-3" class="subtitles"></div>
+	
+	<button id="speed-btn">1.0</button> 
+	<button id="abxButton-btn">A</button> 
+	<button id="rewind-btn">&lt;3s</button> 
+	<button id="play-stop-btn">Play</button> 
+	<button id="forward-btn">3s&gt;</button> 
+	<!--button id="micro-btn">Micro</button--> 
+	<button id="toggleFont-btn">20px</button> 
+
+	
+
+	<!-- Subtitle Delay Adjustment Buttons -->
+
+    <button id="delay-minus" class="delay-btn">D-</button>
+    <button id="delay-reset" class="delay-btn">D0</button>
+    <button id="delay-plus" class="delay-btn">D+</button>
+	<div id="delay-display" style="position: absolute; top: 50px; left: 80px; font-family: Arial; color: #e0e0e0;  font-size: 10px;"></div>
+
+	<div id="pleco-world-display" class="subtitles"></div>
+	
+
+
+
+
+<div id="settingsWindow" style="display:none;">
+    <p id="settingsTitle" style="font-size:14px; color:#404040"></p>
+    <p id="settingsDescription"></p>
+    <div id="buttonContainer"></div> <!-- Container for dynamic buttons -->
+<button id="close-settingsWindow">Close</button>
+</div>
+<button id="settingsWindow-btn">Settings</button>
+
+</div>
+
+</div>
+
+
+
+
+
+</div>
+
+<!-- ***************************************************** JavaScript ******************************************************* -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ----------------------------------------------------------- DIV ---------------------------------------
+    const video = document.getElementById('video');
+    const videoTime = document.getElementById('video-time');
+    const subtitlesDiv1 = document.getElementById('subtitles');
+    const subtitlesDiv2 = document.getElementById('subtitles-2');
+    const subtitlesDiv3 = document.getElementById('subtitles-3');
+    const instructionsDiv = document.getElementById('load-instruction');
+    const delayDiv = document.getElementById('delay-display');
+    const PlecoButtonDisplay = document.getElementById('pleco-world-display'); // Reference to the new container
+
+
+    // ----------------------------------------------------------- FILES ---------------------------------------
+    const videoFile = document.getElementById('video-file'); 
+    const srt1File = document.getElementById('srt-file'); 
+    const srt2File = document.getElementById('srt-file-2'); 
+    const srt3File = document.getElementById('srt-file-3'); 
+    
+    
+    // ----------------------------------------------------------- BUTTON ---------------------------------------
+    const videoBtn = document.getElementById("video-btn");
+    const srt1Btn = document.getElementById("srt1-btn");
+    const srt2Btn = document.getElementById("srt2-btn");
+    const srt3Btn = document.getElementById("srt3-btn");
+    const toggleFont = document.getElementById("toggleFont-btn");
+//    const micro = document.getElementById("micro-btn");
+	
+    const speedBtn = document.getElementById('speed-btn'); // Adding the speed button
+    const abBtn = document.getElementById('abxButton-btn');
+    const rewindBtn = document.getElementById('rewind-btn');
+    const playPauseBtn = document.getElementById('play-stop-btn');
+    const forwardBtn = document.getElementById('forward-btn');
+    const toggleFontBtn = document.getElementById('toggleFont-btn');
+    const settingsWindowBtn = document.getElementById('settingsWindow-btn');
+    const closeSettingsBtn = document.getElementById('close-settingsWindow');
+//	  const microBtn = document.getElementById('micro-btn');
+	
+    const delayPlusBtn = document.getElementById('delay-plus');
+    const delayMinusBtn = document.getElementById('delay-minus');
+    const delayResetBtn = document.getElementById('delay-reset');
+    
+
+    // ----------------------------------------------------------- DIVERSE DEFINITIONS ---------------------------------------
+    const fontSizes = ['18px', '22px', '26px', '30px', '34px', '38px', '42px', '46px', '50px'];
+    const speeds = [1.0, 0.75, 0.5];
+
+// 0, 255, 0, 0.99
+    const colorChange = "rgba(255, 255, 0, 0.2)";
+    const colorDimButton = "rgba(160, 240, 176, 0.2)";
+//HERE    
+    const leftButtonBlockHeight = 65 * 5;
+    const subtitleDivIds = ['subtitles', 'subtitles-2', 'subtitles-3'];
+    
+    const settingsContent = [
+    {
+        title: "1. Navigation Buttons",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+            { id: 'button-plus', text: '+', action: () => adjustButtonPosition(8) },
+            { id: 'button-minus', text: '-', action: () => adjustButtonPosition(-8) },
+            { id: 'button-reset', text: '0', action: () => adjustButtonPosition(0) }
+        ]
+    },
+    {
+        title: "2. SRT1 font size ",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+            { id: 'fontSize-plus1', text: '+', action: () => adjustFontSize('subtitles', 2) },
+            { id: 'fontSize-minus1', text: '-', action: () => adjustFontSize('subtitles', -2) },
+            { id: 'fontSize-reset1', text: '0', action: () => adjustFontSize('subtitles', 0) }
+        ]
+    },
+    {
+        title: "3. SRT1 position",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+            { id: 'position-plus1',  text: '+', action: () => adjustSubtitlePosition('subtitles', 5) },
+            { id: 'position-minus1', text: '-', action: () => adjustSubtitlePosition('subtitles', -5) },
+            { id: 'position-reset1', text: '0', action: () => adjustSubtitlePosition('subtitles', 0) }
+        ]
+    },
+    {
+        title: "4. SRT2 font size ",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+            { id: 'fontSize-plus2', text: '+', action: () => adjustFontSize('subtitles-2', 2) },
+            { id: 'fontSize-minus2', text: '-', action: () => adjustFontSize('subtitles-2', -2) },
+            { id: 'fontSize-reset2', text: '0', action: () => adjustFontSize('subtitles-2', 0) }
+        ]
+    },
+	
+    {
+        title: "5. SRT2 position",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+        { id:  'position-plus2',  text: '+', action: () => adjustSubtitlePosition('subtitles-2', 5) },
+        { id: 'position-minus2',  text: '-', action: () => adjustSubtitlePosition('subtitles-2', -5) },
+        { id: 'position-reset2',  text: '0', action: () => adjustSubtitlePosition('subtitles-2', 0) }
+        ]
+    },	
+    {
+        title: "6. SRT3 font size",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+            { id: 'fontSize-plus3', text: '+', action: () => adjustFontSize('subtitles-3', 2) },
+            { id: 'fontSize-minus3', text: '-', action: () => adjustFontSize('subtitles-3', -2) },
+            { id: 'fontSize-reset3', text: '0', action: () => adjustFontSize('subtitles-3', 0) }
+        ]
+    }, 
+    {
+        title: "7. SRT3 position ",
+        description: "Use - and + to adjust. Press 0 to reset.",
+        buttons: [
+        { id:  'position-plus3',  text: '+', action: () => adjustSubtitlePosition('subtitles-3', 5) },
+        { id: 'position-minus3',  text: '-', action: () => adjustSubtitlePosition('subtitles-3', -5) },
+        { id: 'position-reset3',  text: '0', action: () => adjustSubtitlePosition('subtitles-3', 0) }
+        ]
+    } 
+    
+  ]; // const settingsContent
+
+//HERE;
+    
+    // ----------------------------------------------------------- START ---------------------------------------
+    let currentFontSizeIndex = 0;
+    toggleFontBtn.textContent = fontSizes[currentFontSizeIndex];
+    
+    let currentSpeedIndex = 0;
+    speedBtn.textContent = speeds[currentSpeedIndex].toFixed(2);
+
+     // Initialize AB points and state variables
+    let firstABClick = true;
+    let aPoint = 0, bPoint = 0;
+    let abLoop = false;
+    let abStage = 0; // 0: Set A, 1: Set B, 2: Looping
+    abBtn.textContent = 'Set A';
+	
+    let subtitleDelay = 0; // Delay in seconds
+
+//HERE    
+    let currentContentIndex = 0; // Start with the first item
+
+    let currentY = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--y'));
+    let maxYPosition;
+//HERE;
+
+    // HIDE all button with no function on start
+    toggleFontBtn.style.display = 'none';
+    
+    delayPlusBtn.style.display = 'none';
+    delayMinusBtn.style.display = 'none';
+    delayResetBtn.style.display = 'none';
+    delayDiv.style.display = 'none';
+
+    rewindBtn.style.display = 'none';
+    playPauseBtn.style.display = 'none';
+    abBtn.style.display = 'none';
+    speedBtn.style.display = 'none';
+    forwardBtn.style.display = 'none';
+    
+//HERE    
+    video.controls = false;
+   
+    // Initial check
+    checkOrientation();
+    
+    // left button and subtitle-Position according to video-height
+    adjustYMax();
+    adjustSubtitleY();
+    getSubtitleFontSize();
+    
+//HERE;
+    
+
+
+    
+
+// ----------------------------------------------------------- LISTENER ---------------------------------------
+ 
+//HERE    
+    // Listen for orientation changes
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('resize', adjustYMax);
+    window.addEventListener('resize', adjustSubtitleY);
+//HERE;
+
+
+
+    // einmal für alle Tasten registriert
+    document.addEventListener('keydown', function(event) {
+      if (['f', 'j', '4'].includes(event.key)) {
+          rewindBtn.click(); 
+      
+      } else if (['r', 'u', '7'].includes(event.key)) {
+          forwardBtn.click();
+          
+      } else if (['g', 'h', '0'].includes(event.key)) {
+          videoBtn.click(); 
+          
+      } else if (['v', 'n', '1'].includes(event.key)) {
+          srt1Btn.click(); 
+          
+      } else if (['c', 'm', '2'].includes(event.key)) {
+          srt2Btn.click(); 
+          
+      } else if (['x', ';', '3'].includes(event.key)) {
+          srt3Btn.click(); 
+          
+      } else if (['t'].includes(event.key)) {
+          toggleFontBtn.click(); 
+          
+      } else if (['w', 'o', '9'].includes(event.key)) {
+          settingsWindowBtn.click(); 
+          
+      } else if (['e', 'i', '8'].includes(event.key)) {
+          speedBtn.click(); 
+          
+      }  else if (['s', 'l', '6'].includes(event.key)) {
+          playPauseBtn.click(); 
+          
+      }  else if (['d', 'k', '5'].includes(event.key)) {
+          abBtn.click(); 
+
+      }
+      
+    }); // ('keydown', function(event)
+    
+    
+    
+    // VIDEO-FILE
+    // set value allways to "", otherwise change will not be fired if you come back from other site
+    videoFile.addEventListener('click', function() {
+        videoFile.value = "";
+    });
+
+    videoFile.addEventListener('change', function() {
+        if (this.files.length > 0) {
+//HERE
+            video.setAttribute("controls","controls");
+//HERE;      
+            video.src = URL.createObjectURL(this.files[0]);
+            video.play();
+            
+            // play the last played video -> jump to saved position; otherwise save the new video-filename
+            if (localStorage.lsFileName === this.files[0].name) {
+                video.currentTime = localStorage.lsLastPosition;
+            } else {
+                localStorage.lsFileName = this.files[0].name;
+            }
+
+            videoBtn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            videoBtn.style.color = 'white'; // Change text color to white
+        
+            rewindBtn.style.display = '';
+            playPauseBtn.style.display = '';
+            abBtn.style.display = '';
+            speedBtn.style.display = '';
+            forwardBtn.style.display = '';
+        
+            // Change the color of the buttons to red
+            rewindBtn.style.backgroundColor = "rgb(255, 96, 101)";
+            forwardBtn.style.backgroundColor = "rgb(255, 96, 101)";
+            playPauseBtn.style.backgroundColor = "rgb(255, 96, 101)";
+            abBtn.style.backgroundColor = "rgb(255, 96, 101)";
+            speedBtn.style.backgroundColor = "rgb(255, 96, 101)"; // Apply the color change to the speed button as well
+     
+            // hide the instructions
+            instructionsDiv.style.display = 'none';
+        }
+    }); // videoFile.addEventListener  CHANGE
+    
+    
+    
+    // SRT1-FILE
+    srt1File.addEventListener('change', function() {
+        // False or omission of the third parameter defaults to standard handling.
+        if (this.files.length > 0) {
+            // true -> show and connect plecoButton with this subtitle
+            loadAndDisplaySRTFile(this.files[0], subtitlesDiv1, true);
+//HERE
+            toggleFontBtn.style.display = '';
+            delayPlusBtn.style.display = '';
+            delayMinusBtn.style.display = '';
+            delayResetBtn.style.display = '';
+            delayDiv.style.display = '';
+//HERE;
+            srt1Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            srt1Btn.style.color = 'white'; // Change text color to white
+            srt2Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            srt2Btn.style.color = 'white'; // Change text color to white
+            srt3Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            srt3Btn.style.color = 'white'; // Change text color to white
+            settingsWindowBtn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            settingsWindowBtn.style.color = 'white'; // Change text color to white
+       }
+    }); // srt1File.addEventListener CHANGE
+    
+
+    // SRT2-FILE
+    srt2File.addEventListener('change', function() {
+        // False or omission of the third parameter defaults to standard handling.
+        if (this.files.length > 0) {
+           loadAndDisplaySRTFile(this.files[0], subtitlesDiv2);
+            srt2Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            srt2Btn.style.color = 'white'; // Change text color to white
+        }
+    }); // srt2File.addEventListener CHANGE
+    
+    
+    // SRT3-FILE
+    srt3File.addEventListener('change', function(e) {
+        // False or omission of the third parameter defaults to standard handling.
+        if (this.files.length > 0) {
+            loadAndDisplaySRTFile(this.files[0], subtitlesDiv3);
+            srt3Btn.style.backgroundColor = 'rgba(160, 240, 176, 0.2)'; // Change to desired color
+            srt3Btn.style.color = 'white'; // Change text color to white
+        }
+    }); // srt3File.addEventListener CHANGE
+    
+   
+   
+   
+    //AB-BUTTON
+    abBtn.addEventListener('click', function() {
+        if (abStage === 0) { // Setting point A
+            aPoint = video.currentTime;
+            abBtn.textContent = 'Set B';
+            abStage = 1;
+            
+            // Start video if paused
+            if (video.paused) {
+                playPauseBtn.click();          
+            }
+
+            // Change color for setting point A
+            abBtn.style.backgroundColor = '#FFA500'; // Green for point A
+
+        } else if (abStage === 1) { // Setting point B and starting loop
+            bPoint = video.currentTime;
+            if (bPoint > aPoint) { // Ensure B is after A
+                abLoop = true;
+                abBtn.textContent = 'Exit';
+                abStage = 2;
+                
+                // Change color for setting point B
+                abBtn.style.backgroundColor = '#00ff00'; // Red for point B
+                
+                // Setup looping by checking video time update
+                video.loopFunction = function() {
+                    if (video.currentTime >= bPoint && abLoop) {
+                        video.currentTime = aPoint;
+                        video.play(); // Ensure video plays if it was paused at B
+                    }
+                };
+                video.addEventListener('timeupdate', video.loopFunction);
+                
+            } else {
+                // If B is not after A, reset to setting A
+                alert("Point B must be after Point A.");
+                abStage = 0; // Reset to allow setting A again
+                abBtn.textContent = 'Set A';
+                abBtn.style.backgroundColor = ''; // Reset color
+            }
+            
+        } else { // Stopping the loop
+            abLoop = false;
+            abStage = 0;
+            abBtn.textContent = 'Set A';
+            video.removeEventListener('timeupdate', video.loopFunction);
+            abBtn.style.backgroundColor = ''; // Reset color when stopping the loop
+        }
+        
+        if (firstABClick) {
+            firstABClick = false;
+            changeButtonColor(this);
+            dimButtonColor(srt1Btn);
+            dimButtonColor(srt2Btn);
+            dimButtonColor(srt3Btn);
+            dimButtonColor(toggleFontBtn);
+            // dimButtonColor(settingsWindowBtn); Uncomment if settingsWindowBtn is used
+        }
+    }); // abBtn.addEventListener  CLICK
+   
+   
+    
+    //PLAYPAUSE-BUTTON
+    playPauseBtn.addEventListener('click', function() {
+        changeButtonColor(this);
+        if (video.paused || video.ended) {
+            video.play();
+        } else {
+            video.pause();
+        }        
+    }); //  playPauseBtn.addEventListener  CLICK
+    
+
+    
+    // REWIND-BUTTON
+    rewindBtn.addEventListener('click', function() {
+        changeButtonColor(this);
+        video.currentTime = Math.max(0, video.currentTime - 3); // Rewind 3 seconds or to start
+    }); // rewindBtn.addEventListener  CLICK
+     
+     
+     
+    // FORWARD-BUTTON
+    forwardBtn.addEventListener('click', function() {
+        changeButtonColor(this);
+        const newTime = Math.min(video.duration, video.currentTime + 3); // Advance 3 seconds or to the end
+        video.currentTime = newTime;    
+    }); // forwardBtn.addEventListener  CLICK
+     
+
+       
+	  // TOGGLEFONT-BUTTON
+    toggleFontBtn.addEventListener('click', function() {
+        // Increment the currentFontSizeIndex, cycling back to 0 if at the end of the array
+        currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+        // Update the font size of subtitle 1
+        subtitlesDiv1.style.fontSize = fontSizes[currentFontSizeIndex];
+        // Update the button's text to show the new font size
+        toggleFontBtn.textContent = fontSizes[currentFontSizeIndex];
+    }); // toggleFontBtn.addEventListener CLICK
+  
+
+  
+    // SPEED-BUTTON
+    speedBtn.addEventListener('click', function() {
+        changeButtonColor(this);
+        // Increment the currentSpeedIndex, cycling back to 0 if at the end of the array
+        currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+        // Update the video playback rate
+        video.playbackRate = speeds[currentSpeedIndex];
+        // Update the button label to show the current speed
+        speedBtn.textContent = speeds[currentSpeedIndex].toFixed(2);        
+    }); // speedBtn.addEventListener  CLICK    
+    
+      
+      
+      
+    // DELAYPLUSBUTTON  
+    delayPlusBtn.addEventListener('click', function() {
+        subtitleDelay += 0.2; // Increase delay
+        updateDelayDisplay();
+    });
+
+
+    
+    // DELAYMINUSBUTTON  
+    delayMinusBtn.addEventListener('click', function() {
+        subtitleDelay -= 0.2; // Decrease delay
+        updateDelayDisplay();
+    });
+
+    
+    
+    // DELAYRESETBUTTON  
+    delayResetBtn.addEventListener('click', function() {
+        subtitleDelay = 0; // Reset delay to 0
+        updateDelayDisplay();
+    });
+          
+      
+  
+    // VIDEO
+    // Display videotime
+    video.addEventListener('timeupdate', function() {
+        videoTime.textContent = formatTime(video.currentTime);
+    });
+    
+    // Clear instruction
+    video.addEventListener('click', function() {
+        // Hide the instruction message
+        document.getElementById('load-instruction').style.display = 'none';
+    });
+    
+    // update text playPauseButton play/pause
+    video.addEventListener('pause', function() {
+        playPauseBtn.textContent = 'Play';
+    });
+    
+    
+    // update text playPauseButton play/pause
+    video.addEventListener('play', function() {
+        playPauseBtn.textContent = 'Pause';
+    });
+    
+    
+    
+    // loop settings-button
+    settingsWindowBtn.addEventListener('click', function() {
+        const settingsWindow = document.getElementById('settingsWindow');
+        if (settingsWindow.style.display === 'none' || settingsWindow.style.display === '') {
+            settingsWindow.style.display = 'block';
+            updateSettingsWindowContent(settingsContent[currentContentIndex]); // Provide the current content object
+        } else {
+            currentContentIndex = (currentContentIndex + 1) % settingsContent.length; // Move to the next content
+            updateSettingsWindowContent(settingsContent[currentContentIndex]); // Update the content
+        }
+      // alert('The value of currentY is: ' + currentY);
+    });
+
+    
+    // close settings-window
+    closeSettingsBtn.addEventListener('click', function() {
+        document.getElementById('settingsWindow').style.display = 'none';
+        // currentContentIndex = 0; // Reset to the first item for next opening
+    });
+
+    
+    
+    
+    // WINDOW
+    // save the current position of the video if the user is going to leave this page
+    window.addEventListener('beforeunload', function() {
+        if (video.src && video.currentTime > 0) {
+            localStorage.lsLastPosition = video.currentTime;
+        }
+    });
+
+
+	
+	
+  // ----------------------------------------------------------- FUNCTIONS ---------------------------------------
+//HERE
+    // buttons on left side
+    function adjustYMax() {
+        videoHeight = video.getBoundingClientRect().height;
+        maxYPosition = videoHeight - leftButtonBlockHeight;
+
+        if (localStorage.lsYValue) {
+            let savedY = parseInt(localStorage.lsYValue);
+            if (savedY > maxYPosition) {
+                currentY = maxYPosition;
+            } else {
+                currentY = savedY;
+            }
+        } 
+        document.documentElement.style.setProperty('--y', `${currentY}px`);
+     
+    } // function adjustYMax(
+    
+    
+    // srt
+    function adjustSubtitleY() {
+        function updateSubtitleY(id) {
+          if (value = localStorage.getItem(id + "-Y")) {
+              let vh = videoHeight = video.getBoundingClientRect().height - 7;
+              if (value > vh) {
+                  value = vh;
+              }
+              document.getElementById(id).style.bottom = `${value}px`;
+            }
+        }; // function updateSubtitleY
+        
+        subtitleDivIds.forEach(updateSubtitleY);
+        
+    }; // function updateSubtitleY(id)
+    
+    
+    
+    // subtitle-fontsize from localstorage
+    function getSubtitleFontSize() {
+        function loadSubtitleFontSize(id) {
+          if (value = localStorage.getItem(id + "-F")) {
+              document.getElementById(id).style.fontSize = `${value}px`;
+            }
+        }; // function updateSubtitleY
+        
+        subtitleDivIds.forEach(loadSubtitleFontSize);
+        
+    } // getSubtitleFontSize()
+
+//HERE;
+
+  
+    function checkOrientation() {
+        if (window.innerHeight > window.innerWidth) {
+            // Portrait mode
+            document.getElementById('landscape-mode-message').style.display = 'block';
+        } else {
+            // Landscape mode
+            document.getElementById('landscape-mode-message').style.display = 'none';
+        }
+        
+    } // function checkOrientation()
+
+  
+ 
+    function loadAndDisplaySRTFile(file, subtitlesDiv, showPlecoBtn = false) {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              // Parse the SRT content. Adjusted to always pass isFile1, defaulting to false if not provided.
+              const subtitles = parseSRT(e.target.result);
+              // Display subtitles. If isFile1 is true, PlecoButtonDisplay is also updated, otherwise it's not.
+              displaySubtitles(video, subtitles, subtitlesDiv, showPlecoBtn ? PlecoButtonDisplay : undefined);
+            };
+            reader.readAsText(file);
+        }
+        
+    } // function loadAndDisplaySRTFile
+    
+    
+
+    function parseSRT(srt) {
+        const pattern = /(\d+)\s+(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})\s+([\s\S]*?)(?=\n\n|\r\n\r\n|\n\d|\r\n\d|$)/g;
+        const subtitles = [];
+        let match;
+        while ((match = pattern.exec(srt)) !== null) {
+            let text = match[4].replace(/\n/g, '<br>');
+            subtitles.push({
+              start: timeToSeconds(match[2]),
+              end: timeToSeconds(match[3]),
+              text: text
+            });
+        }
+        return subtitles;
+    
+    } // function parseSRT
+
+    
+
+    function displaySubtitles(video, subtitles, container, PlecoButtonContainer = null) {
+        video.addEventListener('timeupdate', function() {
+            const currentTime = video.currentTime + subtitleDelay; // Add delay to current time
+            const subtitle = subtitles.find(s => currentTime >= s.start && currentTime < s.end);
+            container.innerHTML = subtitle ? subtitle.text : '';
+
+            if (PlecoButtonContainer && container === subtitlesDiv1 && subtitle) {
+                PlecoButtonContainer.innerHTML = generatePlecoButton(subtitle.text);
+            }
+        });
+    } // function displaySubtitles
+
+
+
+    function updateDelayDisplay() {
+        const displayText = subtitleDelay !== 0 ? `Delay: ${subtitleDelay.toFixed(1)}s` : '';
+        delayDiv.textContent = displayText;
+    }
+
+
+    
+    function timeToSeconds(time) {
+        const [hours, minutes, seconds] = time.split(':');
+        return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds.replace(',', '.'));
+    } //  function timeToSeconds
+
+    
+
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    } // function formatTime(seconds)
+    
+    
+    
+    // Function dim button color
+    function dimButtonColor(button) {
+      //  button.style.backgroundColor = "rgba(160, 240, 176, 0.2)";
+        button.style.backgroundColor = colorDimButton;
+        button.style.color = 'white';
+    }
+    
+   
+    
+    // Function to change button color
+    function changeButtonColor(button) {
+      //  button.style.backgroundColor = "rgba(255, 255, 0, 0.2)";
+        button.style.backgroundColor = colorChange;
+    }
+
+    
+
+  // ----------------------------------------------------------- SETTINGS-FUNCTIONS ---------------------------------------
+
+// Initially hide the settings window
+//document.getElementById('settingsWindow').style.display = 'none';
+
+    // adjust fontsize of subtitels
+    function adjustFontSize(subtitleDivId, amount) {
+        let currentFontSize = parseInt(document.getElementById(subtitleDivId).style.fontSize) || 16; // Assuming a default font size of 16px
+        if (amount === 0) {
+            currentFontSize = 16; // Reset to default font size
+        } else {
+            currentFontSize += amount;
+        }
+        document.getElementById(subtitleDivId).style.fontSize = `${currentFontSize}px`;
+        
+        localStorage.setItem(subtitleDivId + "-F", currentFontSize); // save the fontsize
+ 
+    } // function adjustFontSize
+
+
+    
+    // adjust the vertical position of subtitles
+    function adjustSubtitlePosition(elementId, change) {
+        let element = document.getElementById(elementId);
+        let vh = video.getBoundingClientRect().height - 7 - element.getBoundingClientRect().height;
+        let currentBottomY = parseInt(window.getComputedStyle(element).bottom, 10);
+      
+        if (change === 0) { // Reset to default position
+          switch(elementId) {
+            case 'subtitles':
+                currentBottomY = 110; // Default for subtitles 1
+                break;
+            case 'subtitles-2':
+                currentBottomY = 80; // Default for subtitles 2
+                break;
+            case 'subtitles-3':
+                currentBottomY = 145; // Default for subtitles 3
+            }
+            
+        } else {
+            currentBottomY += change;
+            
+        } // if (change === 0)
+        
+       // don't leave the video-dimensions
+        if (currentBottomY > vh) {
+          currentBottomY = vh;
+        } else if (currentBottomY < 7) {
+          currentBottomY = 7; // Reset to default
+        }
+        
+        element.style.bottom = `${currentBottomY}px`;
+        
+        localStorage.setItem(elementId + "-Y", currentBottomY); // Save the currentY value
+        
+    } // function adjustSubtitlePosition
+
+
+
+    // Adjust the vertical position of the side buttons
+    function adjustButtonPosition(change) {
+        // Get the current value of '--y' CSS variable
+        // let currentY = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--y'));
+        // Determine the new value based on the button clicked
+        if (change === 0) {
+            currentY = 7; // Reset to default
+        } else {
+            currentY += change; // Adjust the position
+        }
+//HERE   
+        // don't leave the video-dimensions
+        if (currentY > maxYPosition) {
+          currentY = maxYPosition;
+        } else if (currentY < 7) {
+          currentY = 7; // Reset to default
+        }
+        localStorage.lsYValue = currentY; // Save the currentY value
+//HERE    
+        // Update the '--y' CSS variable with the new value
+        document.documentElement.style.setProperty('--y', `${currentY}px`);
+        console.log("Vertical position of buttons adjusted to: ", currentY);
+        
+    } // function adjustButtonPosition
+
+    
+    
+    function updateSettingsWindowContent() {
+        const content = settingsContent[currentContentIndex]; // Get the current content
+        const titleElement = document.getElementById('settingsTitle');
+    //    const descriptionElement = document.getElementById('settingsDescription');
+        const descriptionElement = "";
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        titleElement.innerText = content.title;
+        descriptionElement.innerText = content.description;
+
+        buttonContainer.innerHTML = ''; // Clear existing buttons
+        content.buttons.forEach(btn => {
+            const button = document.createElement('button');
+            button.classList.add('changeValue-btn'); // Apply CSS class
+            button.textContent = btn.text;
+            button.addEventListener('click', btn.action);
+            buttonContainer.appendChild(button);
+        });
+        
+    } // function updateSettingsWindowContent
+    
+
+
+    function generatePlecoButton(subtitleText) {
+      return `<form action="plecoapi://x-callback-url/s" method="get">
+            <input type="hidden" name="q" value="${subtitleText}">
+            <input type="submit" value="P" class="pleco-button">
+          </form>`;
+    }
+
+
+    
+}); // document.addEventListener('DOMContentLoaded', function() 
+  
+</script>
+
+</body>
+</html>
