@@ -1,0 +1,66 @@
+Version 2.1
+In TriplePlayer version 2.1, we've added several powerful new features to enhance your learning experience: 
+1.	The Subtitle Color toggle (C) allows you to change subtitle colors for better readability; 
+2.	The A+, A-, B+ and B- buttons give you precise control over loop points; 
+3.	Innovative egg and nut baskets provide organized loop storage; 
+4.	Autopilot mode automates loop playback for efficient review; 
+5.	and Save and Restore functionality ensures that your loops are preserved and easily reloaded.
+
+
+
+Subtitle Color
+The Subtitle Color button in TriplePlayer switches subtitle colors between white and yellow for improved readability. Clicking the button toggles the subtitle colors, enhancing visibility and user experience by applying the change to all displayed subtitle tracks.
+
+A+, A-, B+, and B- Buttons
+•	The A+, A-, B+, and B- buttons in TriplePlayer are used to fine-tune the start (A) and end (B) points of a playback loop. The A+ and A- buttons adjust the A point forward and backward, respectively, while the B+ and B- buttons adjust the B point forward and backward. These buttons are useful for precisely setting loop boundaries, allowing users to focus on specific segments for repeated viewing or listening, which is particularly beneficial for language learning and detailed analysis of video content.
+
+
+
+The TriplePlayer Egg and Nut Baskets
+A typical 45-minute TV drama contains between 200 and 300 sentences. To store the loops of these phrases, TriplePlayer provides “egg” and “nut” baskets. For example, you can use the Egg basket to save all the loops, while the Nut basket can be reserved for important phrases – those that are short, contain new vocabulary, or are worth memorizing.
+Description:
+•	Egg Add: This button allows you to save the current loop into the first basket (Egg).
+•	Egg+: Navigates to the next loop in the Egg basket.
+•	Egg-: Navigates to the previous loop in the Egg basket.
+•	Egg Del: Deletes the current loop from the Egg basket.
+•	Egg 0: This button deletes all saved loops from the Egg basket, effectively resetting it.
+
+Similarly, the Nut buttons manage a secondary set of loops.
+These buttons are useful for efficiently managing multiple loops, making it easier to review and practice specific parts of the video, which is especially beneficial for language learning and content analysis.
+The TriplePlayer Autopilot Mode
+In TriplePlayer, several additional buttons help manage and automate loops within the Egg and Nut baskets:
+
+
+
+- **sAuto-btn**: Labeled "AP 0," this button cycles through different AutoPilot (AP) modes for the Egg basket. It allows users to automatically play through their saved loops a specified number of times. Toggling this button cycles through AP 0, 1, 2, and 3 modes:
+  - **AP 0**: AutoPilot mode is off.
+  - **AP 1**: Each loop is played once before moving to the next loop.
+  - **AP 2**: Each loop is played twice before moving to the next loop.
+  - **AP 3**: Each loop is played three times before moving to the next loop.
+  
+  **Important**: To end AutoPilot mode, toggle to AP 0 or click the green AB button (which shows "Exit").
+
+- **sPause-btn**: Labeled "P 0s," this button sets the duration of the pause between loops in the Egg basket. It toggles through P 0s, 1s, 2s, and 3s (s=seconds), allowing users to add a brief pause between loop repetitions, making it easier to process and review content.
+
+
+
+- **zAuto-btn**: Labeled "AP 0," this button cycles through different AutoPilot (AP) modes for the Nut basket, functioning similarly to the sAuto-btn. The modes are:
+  - **AP 0**: AutoPilot mode is off.
+  - **AP 1**: Each loop is played once before moving to the next loop.
+  - **AP 2**: Each loop is played twice before moving to the next loop.
+  - **AP 3**: Each loop is played three times before moving to the next loop.
+  
+  **Important**: To end AutoPilot mode, toggle to AP 0 or click the green AB button (which shows "Exit").
+
+- **zPause-btn**: Labeled "P 0s," this button sets the duration of the pause between loops in the Nut basket. It toggles through P 0s, 1s, 2s, and 3s (s=seconds), allowing users to add a brief pause between loop repetitions.
+
+
+
+Save and Restore Your Loops
+saveStorage:
+The saveStorage function allows users to export the current state of TriplePlayer, including subtitle settings and saved loops, to a JSON file. This function ensures that all settings and progress are preserved, enabling users to easily back up their data.
+restoreStorage:
+The restoreStorage function allows users to import a previously saved JSON file to restore their TriplePlayer settings and progress. This function reinstates the video position, subtitle settings, and saved loops, providing a seamless continuation from where the user left off.
+Usage:
+•	Save Storage: Click the storageSave button to download a JSON file containing the current settings and progress.
+•	Restore Storage: Click the storageRestore button and select a previously saved JSON file to load the settings and progress into TriplePlayer.
