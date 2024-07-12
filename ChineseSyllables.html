@@ -1,0 +1,4217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--************************************************************************************************-->
+<!--******************************************* Chinese Syllables *********************************-->
+<!--******************************************* July 12, 2024 *************************************-->
+<!--************************************************************************************************-->
+<!--******************************************* Version 1.0 *************************************-->
+<!--************************************************************************************************-->
+<!---------------------------------------------------------------------------------------------------->
+<!------------------------------------ Code by: Bernd Sebastian Kamps -------------------------------->
+<!---------------------------------------------------------------------------------------------------->
+<!--************************************************************************************************-->
+
+<!-- Repository: https://github.com/bsk54/TriplePlayer.git -->
+
+<!--************************************************************************************************-->
+<!-- Acknowledgments: Special thanks to all contributors and the open-source community for support and -->
+<!-- contributions to this project. -->
+<!--************************************************************************************************-->
+<!-- Note: ChineseSyallables is free and open source. We encourage modifications and sharing, -->
+<!-- but please give proper credit to the original authors and maintain this header. -->
+<!--************************************************************************************************-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Discover Chinese Syllables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 50px; /* Added to make space for the fixed footer */
+        }
+        .header {
+            background-color: #FF0000; /* China-flag red */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #linksContainer, #resultsContainer {
+            word-wrap: break-word;
+        }
+        #linksContainer a, #resultsContainer div {
+            margin-right: 10px;
+            margin-bottom: 5px;
+            display: inline-block;
+            color: #FF0000; /* China-flag red */
+            text-decoration: none;
+			    font-size: 14px; /* Adjusted font size */
+        }
+        #linksContainer a:hover, #resultsContainer div:hover {
+            text-decoration: underline;
+        }
+		
+
+		#resultsContainer div {
+    margin-bottom: 10px;
+	margin-top: 15px;
+    color: #444444; /* Dark gray for the results */
+				    font-size: 18px; /* Adjusted font size */
+
+}
+        .footer {
+            background-color: #FF0000; /* China-flag red */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Content of the characters_pinyin4.txt file
+            const fileContent = `
+a
+ai
+an
+ao
+ba
+bai
+ban
+bang
+bao
+bei
+ben
+beng
+bi
+bian
+biao
+bie
+bing
+bo
+bu
+ca
+cai
+can
+cang
+cao
+ce
+ceng
+cha
+chai
+chan
+chang
+chao
+che
+chen
+cheng
+chi
+chong
+chou
+chu
+chuai
+chuan
+chuang
+chui
+chun
+chuo
+ci
+con
+cong
+cou
+cu
+cui
+cun
+cuo
+da
+dai
+dan
+dang
+dao
+de
+deng
+di
+dian
+diao
+die
+ding
+diu
+dong
+dou
+du
+duan
+dui
+dun
+duo
+e
+en
+er
+fa
+fan
+fang
+fei
+fen
+feng
+fou
+fu
+ga
+gai
+gan
+gang
+gao
+ge
+gei
+gen
+geng
+gong
+gou
+gu
+gua
+guai
+guan
+guang
+gui
+gun
+guo
+ha
+hai
+han
+hao
+he
+hei
+hen
+heng
+hong
+hou
+hu
+hua
+huai
+huan
+huang
+hui
+hun
+huo
+ji
+jia
+jian
+jiang
+jiao
+jie
+jin
+jing
+jiong
+jiu
+ju
+juan
+jue
+jun
+ka
+kai
+kan
+kang
+kao
+ke
+ken
+kong
+kou
+ku
+kua
+kuai
+kuan
+kuang
+kui
+kun
+kuo
+la
+lai
+lan
+lang
+lao
+le
+lei
+leng
+li
+lian
+liang
+liao
+lie
+lin
+ling
+liu
+long
+lou
+lu
+luan
+lun
+luo
+lǚ
+lǜ
+ma
+mai
+man
+mang
+mao
+me
+mei
+men
+meng
+mi
+mian
+miao
+ming
+mo
+mou
+mu
+na
+nai
+nan
+nang
+nao
+ne
+nei
+neng
+ngg
+ni
+nian
+niang
+niao
+nie
+ning
+niu
+nong
+nu
+nuo
+nüe
+nǚ
+o
+ou
+pa
+pai
+pan
+pang
+pao
+pei
+pen
+peng
+pi
+pian
+pie
+pin
+ping
+po
+pou
+pu
+qi
+qian
+qiang
+qiao
+qie
+qin
+qing
+qiu
+qu
+quan
+que
+ran
+rao
+re
+ren
+reng
+ri
+rong
+rou
+ru
+ruan
+ruo
+sa
+san
+sang
+sao
+se
+sha
+shan
+shang
+shao
+she
+shen
+sheng
+shi
+shou
+shu
+shua
+shuai
+shuan
+shuang
+shui
+shun
+shuo
+si
+song
+su
+suan
+sui
+sun
+suo
+t.
+ta
+tai
+tan
+tang
+tao
+te
+teng
+ti
+tian
+tiao
+tie
+ting
+tong
+tou
+tu
+tuan
+tui
+tun
+tuo
+ue
+wa
+wai
+wan
+wang
+wei
+wen
+wo
+wu
+xi
+xia
+xian
+xiang
+xiao
+xie
+xin
+xing
+xiong
+xiu
+xu
+xuan
+xue
+xun
+ya
+yan
+yang
+yao
+ye
+yi
+yin
+ying
+yong
+you
+yu
+yuan
+yue
+yun
+za
+zai
+zan
+zang
+zao
+ze
+zei
+zeng
+zha
+zhai
+zhan
+zhang
+zhao
+zhe
+zhen
+zheng
+zhi
+zhong
+zhou
+zhu
+zhua
+zhuai
+zhuan
+zhuang
+zhui
+zhun
+zhuo
+zi
+zong
+zou
+zu
+zuan
+zui
+zun
+zuo
+            `;
+
+            // Function to generate links
+            function generateLinks(content) {
+                const syllables = content.split('\n').filter(s => s.trim() !== '');
+                let container = document.getElementById('linksContainer');
+                syllables.forEach(function(syllable) {
+                    let link = document.createElement('a');
+                    link.href = '#'; // Placeholder href, will be handled by JavaScript
+                    link.textContent = syllable.trim();
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        displayResults(syllable.trim());
+                    });
+                    container.appendChild(link);
+                });
+            }
+
+            // Content of pg.txt embedded as a string
+            const pgContent = `
+医学院#yīxué yuàn#Medical College 
+妇科#fùkē#gynecology
+产科#chǎnkē#obstetrics
+博士#bóshì#doctor
+毕业#bìyè#graduate
+目前#mùqián#currently
+医院#yīyuàn#hospital
+医师#yīshī#physician
+住院医师#zhùyuàn yīshī#resident
+同为#tóng wèi#same
+闺#guī#boudoir; best female friend
+蜜#mì#honey
+闺蜜#guīmì#best friends
+竞争#jìngzhēng#competitor
+对手#duìshǒu#opponent, match 
+赶紧#gǎnjǐn#quickly
+产#chǎn#give birth
+产房#chǎnfáng#delivery room
+晚班#wǎnbān#night shift
+产妇#chǎnfù#parturient
+急#jí#anxious; urgent, priority
+整#zhěng#whole, entire 
+医疗#yīliáo#treat
+事故#shìgù#accident
+交班#jiāobān#hand over to the next shift
+线#xiàn#line
+使劲#shǐjìn#with all your strength
+使#shǐ#make, use
+剖#pōu#cut; analyze
+顺#shùn#successful; normal birth
+疼#téng#sore; love
+罪遭#zuì zāo#suffer
+媳妇#xífù#daughter-in-law
+手术室#shǒushù shì#operating room
+胎心#tāi xīn#fetal heart sound
+稳#wěn#stable
+羊水#yángshuǐ#amniotic fluid
+浑浊#húnzhuó#cloudy, murky
+聋#lóng#deaf
+家属#jiāshǔ#family members
+沟通#gōutōng#communicate
+搞定#gǎodìng#sort out
+病房#bìngfáng#ward
+顺产#shùnchǎn#normal delivery
+记录#jìlù#write down, record
+命#mìng#life
+掉#diào#fall, lose
+坏掉#huài diào#broken
+光#guāng#just
+擦#cā#wipe clean
+屁股#pìgu#ass
+长进#cháng jìn#progress
+规培#guī péi#training
+出科#chū kē#graduate
+主任#zhǔrèn#director
+小心#xiǎoxīn#careful
+胎儿#tāi-ér#fetus
+下降#xiàjiàng#drop, decrease
+窒息#zhìxí#suffocate
+来不及#láibují#have no time
+主#zhǔ#main; host, owner, God
+刀#dāo#knife
+上级#shàngjí#higher authorities
+指导#zhǐdǎo#instruct
+单独#dāndú#alone, unaided
+规定#guīdìng#regulation
+孕妇#yùnfù#pregnant woman 
+生命#shēngmìng#life
+赶到#gǎndào#arrive in time
+救#jiù#save
+要紧#yàojǐn#important
+新生儿#xīnshēng-ér#neonatal
+复苏#fùsū#resuscitation
+设备#shèbèi#equipment
+救命#jiùmìng#save a life
+新生儿科#xīnshēng-ér kē#neonatal unit
+抢救#qiǎngjiù#rescue
+麻醉#mázuì#anesthesia
+偏偏#piānpiān#just (ausgerechnet)
+蠢货#chǔnhuò#idiot, dumbass 
+绝#jué#absolutely
+饶#ráo#forgive
+判断#pànduàn#judge
+继续#jìxù#continue
+该#gāi#ought to
+蠢#chǔn#stupid, clumsy
+就算#jiùsuàn#even if
+及时#jíshí#in time
+呼叫#hūjiào#call, shout
+气死#qì sǐ#pissed off
+速#sù#speed
+体征#tǐzhēng#sign
+平稳#píngwěn#stable
+儿科医生#érkē yīshēng#pediatrician
+自主#zìzhǔ#spontaneous
+呼吸#hūxī#breathing
+微弱#wéiruò#weak
+肾上腺#shènshàngxiàn#adrenal glands
+肾上腺素#shènshàngxiàn sù#Adrenaline
+心肺#xīnfèi#cardiopulmonary
+缝合#fénghé#stitch
+庆祝#qìngzhù#celebrate
+满#mǎn#full, complete
+聘#pìn#hire, engage 
+主治医师#zhǔzhì yīshī#attending physician
+火箭#huǒjiàn#rocket 
+张罗#zhāngluo#take care; raise
+团结#tuánjié#unite 
+切#qiè#cut#
+住院总#zhùyuàn zǒng#chief resident
+鼓励#gǔlì#encourage
+丧气#sàngqì#sad, frustrated
+正如#zhèngrú#just as 
+紧#jǐn#tight
+缺#quē#lack
+紧缺#jǐnquē#in short supply 
+至少#zhìshǎo#at least 
+聘上#pìn shàng#get hired
+泼#pō#pour, splash
+毛病#máobìng#problem; illness
+怪话#guàihuà#snide remark
+嘴#zuǐ#mouth
+痒#yǎng#itch
+人员#rényuán#staff
+升职#shēn zhí#get promoted
+接任#jiērèn#take over
+原则#yuánzé#principle
+上来讲#shànglái jiǎng#in terms of
+结束#jiéshù#end 
+轮#lún#round
+培训#péixùn#training
+优秀#yōuxiù#outstanding
+合适#héshì#suitable, appropriate
+顶上#dǐng shàng#fill in ???
+刀口#dāokǒu#incision 
+缝#fèng#sew
+精致#jīngzhì#delicate 
+衰竭#shuāijié#exhausted
+危急#wéijí#critical
+立刻#lìkè#immediately 
+转#zhuǎn#switch
+剖宫产#pōu gōng chǎn#cesarean section
+完成#wánchéng#complete
+完美#wánměi#perfect
+技术#jìshù#technique, technology
+毕竟#bìjìng#actually
+论#lùn#in terms of
+任#rèn#appointment; responsibility 
+强大#qiángdà#powerful
+协调#xiétiáo#collaboration
+科室#kēshì#department, ward
+硬#yìng#hard, firm
+轴#zhóu#axle, axis
+太硬太轴#tài yìng tài zhóu#too stubborn
+老#lǎo#always
+吵架#chǎojià#quarrel
+指#zhǐ#point to, refer to 
+征#zhēng#sign
+啥#shà#what (regional)
+受不了#shòu bùliǎo#can’t stand
+闭上#bì shàng#close
+呼吸#hūxī#breath
+集中#jízhōng#concentrate
+注意#zhùyì#be careful
+放松#fàngsōng#relax
+感觉#gǎnjué#feel, sense
+当时#dāngshí#at that time
+事后#shìhòu#afterwards
+力#lì#force
+足#zú#enough 
+体力#tǐlì#physical strength
+相信#xiāngxìn#believe
+宝宝#bǎobǎo#darling
+努力#nǔlì#try hard
+白费#báifèi#in vain; wate
+像#xiàng#look like; portrait
+温柔#wēnróu#gentle
+辛苦#xīnkǔ#laborious
+付出#fùchū#spend, pay
+机灵#jīling#clever
+遇到#yùdào#meet
+家属#jiāshǔ#family member
+撒娇#sājiāo#behave like a spoiled child
+耍赖#shuǎlài#act shamelessly
+装#zhuāng#pretend
+能干#nénggàn#capable
+发脾气#fā píqì#lose one’s temper
+解决#jiějué#solve
+合成#héchéng#merge, synthesize
+届#jiè#class, year
+里头#lǐtou#in 
+希望#xīwàng#hope
+最大#zuìdà#maximum
+省#shěng#save
+好几#hǎojǐ#a lot of
+争取#zhēngqǔ#strive for
+聘#pìn#engage, hire
+主治#zhǔzhì#attending doctor
+算是#suànshì#finally
+真正#zhēnzhèng#true
+怀#huái#pregnant 
+纠结#jiūjié#get entangled 
+心思#xīnsī#thoughts
+剩#shèng#be left
+剩下#shèng xià#rest
+听天由命#tīngtiānyóumìng#resign oneself to one’s fate 
+公平#gōngpíng#fair
+竞争#jìngzhēng#compete
+根本#gēnběn#at all
+带#dài#take
+成年#chéngnián#grow up, mature
+江湖#jiānghú#rivers and lakes
+地位#dìwèi#position
+年龄#niánlíng#age
+无关#wúguān#has nothing to do with
+原来#yuánlái#turns out to be
+神#shén#God
+升级#shēngjí#upgrade, go up, escalate
+战#zhàn#war; fight
+建#jiàn#create
+档#dàng#file
+建档#jiàn dàng#create a file
+打胎#dǎtāi#abortion
+查#chá#inspect, investigate
+绒毛膜#róngmáo mó#chorion
+性腺#xìngxiàn#gonad
+激素#jīsù#hormone
+超声波#chāoshēngbō#ultrasound
+检查#jiǎnchá#examination 
+床上#chuángshàng#bed
+躺#tǎng#lie
+再一趟#zài yī tàng#one more visit
+手续#shǒuxù#procedure
+欺骗#qīpiàn#deceive, cheat
+受罪#shòuzuì#suffer
+对劲#duìjìn#normal; well-suited
+风险#fēngxiǎn#risk
+收#shōu#accept
+孕妇#yùnfù#pregnant woman 
+疑#yí#suspicion
+杂#zá#miscellaneous
+症#zhèng#disease
+圣手#shèngshǒu#‘holy hand’, miracle healer
+送#sòng#deliver, send
+观音#guānyīn#Guanyin (Buddhism)
+神#shén#God; amazing, clever
+派#pài#assign
+管#guǎn#be in charge
+日常#rìcháng#everyday
+血压#xuèyā#blood pressure
+晕#yūn#feel dizzy
+盯#dīng#stare
+紧#jǐn#tight, close
+妊娠#rènshēn#be pregnant
+特殊#tèshū#special
+交代#jiāodài#instruction
+善#shàn#friendly
+茬#chá#stubble, crop
+搞#gǎo#do, get
+交#jiāo#entrust
+对付#duìfù#deal with, make do
+总之#zǒngzhī#anyway, in a word
+保证#bǎozhèng#guarantee
+完成#wánchéng#complete
+任务#rènwù#task
+陪同#péitóng#accompany
+游戏#yóuxì#game
+幸亏#xìngkuī#fortunately
+报告#bàogào#report
+显示#xiǎnshì#demonstrate
+宫#gōng#palace
+外#wài#outside
+孕#yùn#pregnancy
+宫外孕#gōngwàiyùn#ectopic pregnancy
+胚胎#pēitāi#embryo
+落#luò#fall; leave
+子宫#zǐgōng#uterus
+输#shū#transport; lose
+卵#luǎn#ovum; ova
+管#guǎn#pipe, tube, duct; wind instrument
+输卵管#shūluǎnguǎn#fallopian tube
+凶险#xiōngxiǎn#perilous
+一旦#yīdàn#single day
+破裂#pòliè#rupture, break
+住院#zhùyuàn#be hospitalized
+通知#tōngzhī#inform
+同意书#tóngyì shū#consent form
+医保#yībǎo#medical insurance
+骂#mà#insult, scold
+坚持#jiānchí#go on
+仔细#zǐxì#thorough, careful
+解释#jiěshì#explain
+心情#xīnqíng#mood, frame of mind
+生理#shēnglǐ#physiology
+卫生#wèishēng#hygiene
+肯#kěn#be willing
+骗#piàn#deceive, swindle
+姑娘#gūniáng#girl
+撇#piē#cast, skim
+够#gòu#enough
+不要脸#bùyàoliǎn#shameless
+护#hù#protect
+而已#éryǐ#basta! that’s all
+误会#wùhuì#misunderstanding
+套近乎#tàojìnhū#get close to
+占用#zhànyòng#occupy
+座位#zuòwèi#seat
+资源#zīyuán#resource
+青#qīng#green-blue
+皂#zào#black, soap
+青红皂白#qīnghóngzàobái#indiscriminate (the rights and wrongs)
+火气#huǒqì#anger
+建议#jiànyì#propose
+分泌#fēnmì#secretion
+内分泌#nèifēnmì#endocrine system
+免得#miǎndé#so as not to
+影响#yǐngxiǎng#affect, influence
+情绪#qíngxù#mood
+离开#líkāi#leave, depart
+绝对#juéduì#absolutely
+升级#shēngjí#upgrade
+份上#fèn shàng#for the sake of 
+晕#yūn#dizzy
+孕期#yùnqí#pregnancy period
+同房#tóngfáng#live together, have sex
+头晕#tóuyūn#dizziness
+抓紧#zhuājǐn#make the most of
+妊娠#rènshēn#be pregnant; gestational 
+期间#qíjiān#during; period
+清淡#qīngdàn#light, non-oily
+麻辣#málà#spicy
+鸡#jī#chicken
+翅#chì#wing
+划#huà#row
+性#xìng#character, function; gender, sex
+口味#kǒuwèi#taste
+重#zhòng#strong
+川菜#chuāncài#Sichuan food
+湘菜#xiāngcài#Hunan food
+重油#zhòngyóu#heavy oil
+盐#yán#salt
+外卖#wàimài#take-out
+靠谱#kào pǔ#reliable
+丈母娘#zhàngmǔniáng#mother-in-law
+曾经#céngjīng#once
+流行#liúxíng#popular, trendy
+谎#huǎng#lie
+说谎的人#shuōhuǎng de rén#liar
+吞#tūn#swallow
+根针#gēn zhēn#needle
+门诊#ménzhěn#outpatient clinic
+病房#bìngfáng#ward
+堵#dǔ#block
+提#tí#carry
+提醒#tíxǐng#remind
+腹#fù#stomach
+空腹#kōngfù#on an empty stomach
+闲#xián#idle
+跑#pǎo#run, escape
+顺便#shùnbiàn#on the way
+魂#hún#spirit, soul
+阴魂#yīnhún#spirits of the death
+单子#dānzi#list
+求#qiú#request, demand 
+全部#quánbù#whole
+包庇#bāobì#cover up
+人家#rénjiā#family
+配#pèi#match; marry
+那样#nàyàng#such
+借#jiè#borrow
+付得起#fù dé qǐ#affordable
+途#tú#way 
+途中#túzhōng#during
+任何#rènhé#any
+意外#yìwài#accident; unexpected
+听天由命#tīngtiānyóumìng#resign oneself to one’s fate
+距离#jùlí#be at a distance
+尽量#jǐnliàng#to the best of one’s abilities
+早就#zǎojiù#long ago
+年纪#niánjì#age
+除非#chúfēi#unless
+一辈子#yībèizi#en entire life
+勤#qín#duty; hard-working
+测#cè#measure
+指望#zhǐwàng#count on
+出院#chūyuàn#leave hospital
+确定#quèdìng#determine; definite
+难说#nánshuō#hard to say
+照顾#zhàogù#look after; consider
+兄弟#xiōngdì#brother
+控制#kòngzhì#control
+疯#fēng#mad
+接生#jiēshēng#deliver
+整#zhěng#whole
+葫芦#húlu#gourd
+娃#wá#baby
+接生#jiēshēng#delivery
+每当#měi dāng#every time
+诞生#dànshēng#be born
+爆棚#bàopéng#burst
+成就#chéngjiù#achievement
+当初#dāngchū#those days
+无比#wúbǐ#incomparable
+正确#zhèngquè#correct
+见证#jiànzhèng#witness; clear proof
+意义#yìyì#meaning, significance
+累死#lèi sǐ#tired to death
+难产#nánchǎn#dystocia
+搞#gǎo#do
+一下午#yīxiàwǔ#whole afternoon 
+求婚#qiúhūn#propose
+邀请#yāoqǐng#invite
+环#huán#ring
+室友#shìyǒu#roommate
+双#shuāng#two; pair
+喜临#xǐlín#happy
+答应#dāyìng#answer; agree
+犹豫#yóuyù#hesitant
+稳定#wěndìng#stable; steady
+对#duì#pair
+单身#dānshēn#single
+护士#hùshì#nurse
+虎#hǔ#tiger
+视#shì#look at, inspect
+眈眈#dāndān#gaze (obsolete)
+虎视眈眈#hǔshì-dāndān#eyeing 
+抢#qiǎng#rob
+夸张#kuāzhāng#exaggerated
+时机#shíjī#opportunity
+合租#hézū#share tenancy
+蹲#dūn#stay, squat
+地下室#dìxiàshì#basement
+成本#chéngběn#cost
+降低#jiàngdī#reduce
+失去#shīqù#lose
+再说#zàishuō#see/decide later
+人生#rénshēng#life
+清楚#qīngchǔ#clear; understand
+外界#wàijiè#outside world
+因素#yīnsù#element, factor
+谈#tán#talk
+恋爱#liàn-ài#love
+语气#yǔqì#tone of voice; mood
+瞎扯#xiāchě#talk nonsense
+蜡烛#làzhú#candle
+点上#diǎn shàng#???
+浪漫#làngmàn#romantic
+房东#fángdōng#landlord
+逼#bī#force
+搬走#bān zǒu#move away
+屋子#wūzi#room; house
+停#tíng#stop
+本来#běnlái#going to
+结果#jiéguǒ#result; in the end
+浪费#làngfèi#waste
+过来#guòlái#come over
+折腾#zhēteng#do again and again
+龙虾#lóngxiā#lobster
+适合#shìhé#suitable
+气氛#qìfēn#atmosphere
+纪念#jìniàn#commemorate
+嫁#jià#marry; shift the blame
+款#kuǎn#sum of money
+存款#cúnkuǎn#savings
+涨#zhǎng#increase
+攒#zǎn#assemble
+念头#niàntou#marry
+轮转#lúnzhuǎn#rotation
+争#zhēng#fight, argue
+只要#zhǐyào#as long as
+顺利#shùnlì#smooth
+通过#tōngguò#pass
+往#wǎng#to; pass
+人选#rénxuǎn#candidate
+接替#jiētì#replace
+耽误#dānwù#delay
+高龄#gāolíng#older; old age
+组成#zǔchéng#form
+家庭#jiātíng#family
+肯定#kěndìng#certainly; confirm; affirmative
+牺牲#xīshēng#sacrifice
+事业#shìyè#activity
+进度#jìndù#pace; schedule
+无论#wúlùn#no matter what
+挑选#tiāoxuǎn#select
+凑#còu#encounter; gather together
+着急#zhāojí#worried
+程序#chéngxù#procedure
+最短#zuìduǎn#shortest
+初级#chū jí#primary, junior
+阶段#jiēduàn#stage
+顶级#dǐngjí#top
+方向#fāngxiàng#direction
+定#dìng#decide
+目标#mùbiāo#goal
+一直#yīzhí#always
+改变#gǎibiàn#change
+偶像#ǒuxiàng#idol
+终身#zhōngshēn#lifelong
+未#wèi#not
+未嫁#wèi jià#unmarried
+上升#shàngshēng#increase, ascent
+关键#guānjiàn#key, crux
+时刻#shíkè#moment
+中止#zhōngzhǐ#cease
+奔跑#bēnpǎo#dash, run
+起码#qǐmǎ#minimum
+好歹#hǎodǎi#anyway; right and wrong; unthinkable
+妊#rèn#pregnant
+症#zhèng#disease
+妊高症#rèn gāo zhèng#preeclampsia
+自欺欺人#zìqīqīrén#deceive oneself and others 
+暂缓#zhànhuǎn#postpone, put off
+暂时#zhànshí#for a while 
+放弃#fàngqì#give up
+另外#lìngwài#other
+梦想#mèngxiǎng#dream
+难道#nándào#is it possible that
+值得#zhídé#be worth
+尊重#zūnzhòng#respect
+事实#shìshí#fact
+拖累#tuōlèi#be a burden
+平等#píngděng#equal
+子宫#zǐgōng#uterus
+工具#gōngjù#tool
+实力#shílì#strength
+当做#dàngzuò#regard as
+终极#zhōngjí#ultimate
+目标#mùbiāo#goal, target
+争#zhēng#argue, contend
+尤其#yóuqí#especially
+两全#liǎng quán#satisfy both sides
+招#zhāo#beckon
+改#gǎi#change
+皇#huáng#emperor
+女皇#nǚhuáng#empress
+就算#jiùsuàn#even if
+拼命#pīnmìng#desperately, by all means; risk one’s life
+继位#jìwèi#succession
+讨厌#tǎoyàn#hate, dislike
+重#zhòng#valuable, important
+轻#qīng#unimportant
+重男轻女#zhòngnán-qīngnǚ#female discrimination
+招来#zhāolái#recruit
+懂得#dǒngdé#know
+绝对#juéduì#absolutely
+卫#wèi#protect
+卫生间#wèishēngjiān#bathroom
+显灵#xiǎnlíng#appear
+啦#la#hey
+休息#xiūxí#rest
+准#zhǔn#accurate
+加持#jiāchí#blessing
+分析#fēnxī#analyze
+奇#qí#unusually
+加上#jiāshàng#in addition
+上任#shàngrèn#take up a new post
+通道#tōngdào#route, passageway
+之前#zhīqián#ahead, before
+史#shǐ#history
+以来#yǐlái#since
+导师#dǎoshī#mentor, tutor
+刚好又是#gānghǎo yòu shì#happen to be
+资深#zīshēn#senior
+赶#gǎn#catch
+赶上个好#gǎn shàng gè hǎo#good catch
+科研#kēyán#scientific research
+项目#xiàngmù#project
+连续#liánxù#without stopping
+快速#kuàisù#quick
+留住#liúzhù#keep
+特意#tèyì#especially
+主因#zhǔyīn#main cause
+停经#tíngjīng#menopause
+恶心#ěxīn#nausea
+呕吐#ǒutù#vomiting
+加重#jiāzhòng#worsen
+既往#jìwǎng#previous
+月经#yuèjīng#menstruation
+规律#guīlǜ#regular
+尿#niào#urine
+绒毛#róngmáo#fluff
+出现#chūxiàn#appear
+伴#bàn#accompany
+间断#jiànduàn#interrupt
+伴随#bànsuí#accompany, follow
+腹#fù#stomach, belly
+胀#zhàng#swell, expand
+泻#xiè#pour down, have diarrhea
+腹泻#fùxiè#diarrhea
+发热#fārè#have a fever
+症状#zhèngzhuàng#symptom
+脉#mài#blood vessels, pulse
+搏#bó#beat
+脉搏#màibó#pulse
+加快#jiākuài#increased; at top speed
+全身#quánshēn#systemic (whole body)
+度#dù#degree
+脱水#tuōshuǐ#dehydrate
+符合#fúhé#match
+剧#jù#severe
+收入#shōurù#admit
+尿酮体#niàotóngtǐ#urinary ketone bodies
+毫升#háoshēng#milliliter
+比重#bǐzhòng#proportion
+营养#yíngyǎng#nutrious
+吸收#xīshōu#absorb
+透露#tòulù#disclose
+流产#liúchǎn#have an abortion; fall through
+婆婆#pópo#mother-in-law; old lady
+压力#yālì#pressure
+理解#lǐjiě#understand
+剧#jù#severe; drama 
+剧吐#jù tǔ#hyperemesis
+心理#xīnlǐ#psychology
+作用#zuòyòng#effect
+矫情#jiǎoqíng#pretense
+配合#pèihé#cooperate
+治疗#zhìliáo#cure
+关心#guānxīn#be concerned about
+对于#duìyú#with regard to
+用心#yòngxīn#be careful; careful
+儿媳妇#érxífù#daughter-in-law
+撑#chēng#hold on
+流掉#liúdiào#abort
+坚持#jiānchí#persistent
+坚强#jiānqiáng#strong
+接下来#jiē xiàlái#next
+禁#jìn#ban
+食#shí#food
+禁食#jìn shí#fast
+充分#chōngfèn#fully, ample
+静#jìng#still, quiet
+脉#mài#blood vessel
+静脉#jìngmài#vein
+补充#bǔchōng#add; supplementary
+注射#zhùshè#inject
+钾#jiǎ#Potassium
+离子#lízǐ#ion
+钙#gài#calcium
+热量#rèliàng#calorie; amount of heat
+维生素#wéishēngsù#vitamin
+尽快#jǐnkuài#as soon as possible
+纠正#jiūzhèng#correct
+低钙血#dī gài xuè#hypocalemia
+状态#zhuàngtài#condition
+密切#mìqiè#close
+监测#jiāncè#monitor
+电解质#diànjiězhì#electrolyte
+常规#chángguī#routine; convention
+血气#xuèqì#blood gas
+化验#huàyàn#test
+严格#yángé#strict
+出入#chūrù#in and out
+量#liàng#quantity; measure
+补液#bǔyè#fluid infusion
+拉#lā#transport
+阴道#yīndào#vagina
+少量#shǎoliàng#a little
+可疑#kěyí#suspicious
+胎盘#tāipán#placenta
+剥#bō#abruption; peel
+临床#línchuáng#clinical
+表现#biǎoxiàn#presentation; show
+尽早#jǐnzǎo#as soon as possible
+终止#zhōngzhǐ#stop
+保#bǎo#keep; protect
+患#huàn#suffer
+囊#náng#bag, pocket
+卵巢#luǎncháo#ovary 
+囊卵巢#náng luǎncháo#polycystic ovarian syndrome
+??##
+新鲜#xīnxiān#fresh, novel
+项#xiàng#[events, orders]
+指标#zhǐbiāo#indicator
+良#liáng#good
+尝试#chángshì#try
+指征#zhǐ zhēng#indication
+挤#jǐ#squeeze
+方面#fāngmiàn#aspect, side
+尸检#shījiǎn#autopsy
+孽#zuòniè#sin
+丢人#diūrén#humiliating; lose face
+回复#huífù#reply, return
+预#yù#in advance; take part 
+预产期#yùchǎnqí#due date
+缩#suō#contract; withdraw
+等到#děngdào#until
+进行#jìnxíng#carry out
+引产#yǐnchǎn#induce labor
+分娩#fēnmiǎn#give birth
+失败#shībài#fail
+合并#hébìng#combine; merge
+具体#jùtǐ#detailed, particular
+发动#fādòng#onset, start; launch
+毋#wú#not
+躁#zào#rash
+计较#jìjiào#argue; bother
+主意#zhǔyì#idea, opinion
+随#suí#follow, go along with
+告#gào#sue; tell; request
+态度#tàidù#attitude, manner
+患者#huànzhě#patient
+伸手#shēnshǒu#hold out one’s hand
+笑脸#xiàoliǎn#grin cheekily; smiley
+护士长#hùshì zhǎng#head nurse
+夸#kuā#praise, exaggerate
+情商#qíngshāng#emotional intelligence
+笑#xiào#smile
+随#suí#follow, go along with
+告#gào#sue; tell; request
+态度#tàidù#attitude, manner
+矛#máo#spear
+盾#dùn#shield
+矛盾#máodùn#argue
+开刀#kāidāo#operate
+靠#kào#rely on
+手术刀#shǒushùdāo#scalpel
+休克#xiūkè#shock
+鞭策#biāncè#spur on
+铭#míng#inscription; engrave
+座右铭#zuòyòumíng#motto
+治愈#zhìyù#healing
+总是#zǒngshì#always
+勉强#miǎnqiáng#unconvincing
+安慰#ānwèi#confort
+排队#páiduì#queue, stand in line
+境界#jìngjiè#level
+伤害#shānghài#hurt; damage
+条#tiáo#item, point
+联#lián#unite
+珠#zhū#pearl, bead
+珠联璧合#zhūliánbìhé#good combination
+一共#yīgòng#altogether
+职责#zhízé#responsibility
+棘手#jíshǒu#thorny
+经产妇#jīng chǎnfù#multiparous
+之内#zhī nèi#within
+夭折#yāozhé#die young
+全家#quánjiā#the whole family
+避免#bìmiǎn#avoid 
+身上#shēnshang#on the body
+评分#píngfēn#score
+尸#shī#corpse
+推断#tuīduàn#deduce
+关联#guānlián#be interrelated
+代表#dàibiǎo#represent, stand in for
+强#qiáng#strong; stubborn
+随机#suíjī#random
+事件#shìjiàn#event
+模糊#móhú#vague; blurred
+严谨#yánjǐn#strict, meticulous
+大概#dàgài#general idea
+回去#huíqù#go back
+琢磨#zhuómó#figure out, ponder; polish
+齐#qí#level
+受苦#shòukǔ#suffer
+共情#gòngqíng#empathize
+同理心#tóng lǐ xīn#empathy, compassion
+讨论#tǎolùn#discuss
+值夜#zhíyè#night shift
+总#zǒng#always
+困#kùn#sleepy
+明明#míngmíng#obviously
+却#què#however; step back, decline
+幻想#huànxiǎng#dream, fantasy
+发表#fābiǎo#publish
+孕吐#yùntù#vomiting during pregnancy
+说服#shuōfú#persuade
+佳#jiā#fine, best
+生育#shēngyù#give birth
+后悔#hòuhuǐ#regret
+枪#qiāng#gun; spear
+埋#mái#bury, hide
+炸药#zhàyào#explosive
+八卦#bāguà#gossip
+超#chāo#exceed, transcend; super
+下班#xiàbān#finish work
+件事#jiàn shì#event 
+追#zhuī#chase
+手下#shǒuxià#subordinate; under
+帮#bāng#get hired; help
+闹#nào#have a row
+别扭#bièniu#bickering
+底下#dǐxia#under
+插#chā#insert
+针#zhēn#needle
+见缝插针#jiànfèngchāzhēn#take every opportunity
+贤淑#xiánshū#virtuous
+凶悍#xiōnghàn#fierce
+咬#yǎo#bite
+狼#láng#wolf
+外号#wài hào#nickname
+起错#qǐ cuò#make a mistake
+容#róng#fit, tolerate, allow
+沙子#shāzi#sand
+劝#quàn#advise, encourage
+反而#fǎn-ér#instead
+感情#gǎnqíng#emotion
+升华#shēnghuá#sublimate
+必然#bìrán#inevitable
+提出#tíchū#put forward
+所谓#suǒwèi#so-called
+记住#jìzhù#keep in mind
+往往#wǎngwǎng#often
+道歉#dàoqiàn#apology
+抽#chōu#convulse
+吸氧#xī yǎng#oxygen
+监#jiān#supervise
+护#hù#protect
+仪#yí#instrument
+心电监护仪#xīn diàn jiānhù yí#ECG monitor
+蛋#dàn#egg
+蛋白#dànbái#protein
+病情#bìngqíng#condition
+进展#jìnzhǎn#progress
+解痉#jiě jìng#antispasmodic
+硫#liú#sulfur
+酸#suān#acid
+镁#měi#magnesium
+硫酸镁#liúsuān měi#magnesium sulfate
+忽然#hūrán#suddenly
+抽搐#chōuchù#seizure
+废话#fèihuà#nonsense
+克#kè#gram
+子痫#zǐ xián#eclampsia 
+吼#hǒu#howl, roar
+复杂#fùzá#complicated, complex
+引起#yǐnqǐ#cause
+平时#píngshí#usually
+运动#yùndòng#move; sport
+家族#jiāzú#family
+血栓#xuèshuān#thrombosis, clot
+孤儿#gū-ér#orphan
+乐队#yuèduì#band
+主唱#zhǔchàng#leader; play the lead
+出名#chūmíng#become famous 
+赚#zhuàn#earn, make a profit
+演出#yǎnchū#perform
+保障#bǎozhàng#security; protection
+职业#zhíyè#occupation
+乐器#yuèqì#musical instrument
+收费员#shōufèiyuán#clerk
+腿#tuǐ#leg
+发麻#fāmá#numb
+推#tuī#postpone
+赔#péi#make a loss; make good
+以及#yǐjí#as well as
+随时#suíshí#at any time
+早产#zǎochǎn#premature birth
+减少#jiǎnshǎo#reduce
+下去#xiàqù#continue
+接#jiē#take over
+能耐#néngnài#be capable of
+乐意#lèyì#happy; be willing to
+能够nénggòu#be able to#
+制度#zhìdù#system
+经历#jīnglì#experience
+无数#wúshù#countless
+经验#jīngyàn#experience
+最大化#zuìdà huà#maximize
+合理#hélǐ#rational
+分配#fēnpèi#distribution
+再者#zàizhě#furthermore
+处理#chǔlǐ#deal with
+白#bái#in vain; white
+深#shēn#deep; remote
+震#zhèn#shake; earthquake
+撼#hàn#shake
+震撼#zhènhàn#shake
+简直#jiǎnzhí#simply
+天才#tiāncái#talent, genius
+请教#qǐngjiào#consult
+兼顾#jiāngù#balance
+怀孕#huáiyùn#be pregnant
+研#yán#research
+读研#dú yán#postgraduate study
+旺盛#wàngshèng#thriving, full of energy
+拖#tuō#put off, delay
+企业#qǐyè #enterprise
+合伙人#héhuǒrén#partner
+白菜#báicài#Chinese cabbage
+拼#Pīn#go all out, join together
+试管#shìguǎn#test tube
+婴#yīng#baby
+试管婴儿#shìguǎn yīng-ér#IVF
+好不#hǎobù#so
+勉强#miǎnqiáng#with troublee and need
+例#lì#case, example
+要么#yàome#either…or
+两头#liǎngtóu#both sides
+占#zhàn#take
+事情#shìqíng#thing
+操心#cāoxīn#concern
+拽#zhuāi#push, pull
+随便#suíbiàn#casual
+喔#wō#oh
+拦#lán#stop
+摔#shuāi#fall
+勇敢#yǒnggǎn#brave
+想象#xiǎngxiàng#imagination
+沉醉#chénzuì#intoxicated
+熟#shú#ripe, cooked; skilled
+熟睡#shúshuì#deep sleep
+皱眉#zhòuméi#frown
+烦恼#fánnǎo#worried
+漫画#mànhuà#comic
+貌相#màoxiàng#appearance
+依然#yīrán#still
+宝贝#bǎobèi#darling, treasure; idiot
+珍贵#zhēnguì#precious
+拥有#yǒngyǒu#have
+脑癌#nǎo ái#brain cancer
+高端#gāoduān#high-end
+馆子#guǎnzi#restaurant
+珍珠#zhēnzhū#pearl
+星#xīng#star
+败#bài#defeat; ruin
+挂#guà#hang up
+蛋糕#dàngāo#cake
+吞吞吐吐#tūntūn-tǔtǔ#stammer
+请假#qǐngjià#ask for a leave
+顶#dǐng#take the place of
+甘心#gānxīn#be willing, be satisfied
+名额#míng-é#position (job)
+场景#chǎngjǐng#scene
+幻想#huànxiǎng#dream, fantasize
+恭喜#gōngxǐ#congratulation
+美梦#měimèng#beautiful dream
+孕育#yùnyù#be pregnant with
+美好#měihǎo#wonderful
+神奇#shénqí#magical
+竟然#jìngrán#unexpectedly
+干女儿#gàn nǚ-ér#goddaughter
+贴心#tiēxīn#intimate
+棉#mián#cotton
+袄#ǎo#coat
+棉袄#mián-ǎo#padded jacket
+嘱#zhǔ#admonish
+医嘱#yīzhǔ#medical advice
+嗦#suo#tremble (rage)
+啰哩啰嗦了#luō lī luōsuole#nagging
+干吗#gànma#why
+惊#jīng#start
+乍#zhà#suddenly
+岛#dǎo#island
+情侣#qínglǚ#lovers
+责任#zérèn#responsibility
+观#guān#view, look
+未来#wèilái#future
+样子#yàngzi#appearance
+陌生#mòshēng#unfamiliar
+观点#guāndiǎn#point of view
+接受#jiēshòu#accept
+讲#jiǎng#speak, explain
+悄悄#qiāoqiāo#quietly
+眯#mī#take a nap
+盖#gài#cover
+居然#jūrán#unexpectedly
+台#tái#table
+膛#táng#chest
+肚#dù#belly
+离职#lízhí#former
+情怀#qínghuái#feelings
+招待#zhāodài#entertain
+外地#wàidì#other parts of the country
+亲朋#qīnpéng#friends and family
+景点#jǐngdiǎn#scenic spot
+没准#méizhǔn#maybe
+碰#pèng#bump into
+专家#zhuānjiā#expert
+拉关系#lāguānxì#make connections
+怪#guài#strange
+难怪#nánguài#no wonder
+老头子#lǎotóuzi#my old man
+基因#jīyīn#gene
+实验室#shíyànshì#laboratory
+弟子#dìzǐ#disciple
+愿意#yuànyì#be willing to
+突发#túfā#emerge
+突发情况#túfā qíngkuàng#emergencies 
+尝#cháng#taste
+尽#jǐn#as far as possible; most
+悲#bēi#sad 
+欢#huān#happy 
+悲欢离合#bēihuān-líhé#good times, bad times
+无聊#wúliáo#boring
+人类#rénlèi#mankind
+科学#kēxué#science
+蹚#tāng#wade
+浑#hún#muddy
+换#huàn#exchange, replace
+换肝#huàn gān#liver transplant
+扔#rēng#throw away
+贡献#gòngxiàn#contribute
+滚蛋#gǔndàn#scam, get out
+怪不得#guàibùdé#no wonder
+饮料#yǐnliào#drink
+想起#xiǎngqǐ#remember
+记挂#jìguà#be concerned about
+拯救#zhěngjiù#save
+大脑#dànǎo#brain
+社会#shèhuì#society
+期待#qídài#hope; await
+零件#língjiàn#(spare) parts
+痛苦#tòngkǔ#pain, painful
+圈#quān#circle
+拉黑#lā hēi#block ?? 
+提#ti#mention
+花#huā#flower
+雪#xuě#snow
+风花雪月#fēnghuāxuěyuè#love affair
+熟人#shúrén#old acquaintance
+发#fā#hair
+从小#cóngxiǎo#since childhool
+武断#wǔduàn#be arbitrary
+不符合#bù fúhé#incompatible
+常理#chánglǐ#common sense
+故事#gùshì#story
+道理#dàolǐ#sense, principle
+刀子#dāozi#knife
+豆腐#dòufu#tofu
+吃亏#chīkuī#be at a disadvantage
+冻#dòng#freeze
+柠#níng#lemon
+娘#niáng#auntie, mum
+找茬#zhǎochá#pick a fight
+冷静#lěngjìng#quiet, cool-headed
+承认#chéngrèn#acknowledge, recognize
+那天#nèitiān#that day
+消息#xiāoxī#news
+冲昏#chōng hūn#overwhelmed
+证明#zhèngmíng#prove
+处#chù#be together
+相知#xiāngzhī#be well acquainted
+相伴#xiāngbàn#companionship
+信守#xìnshǒu#stand by
+承诺#chéngnuò#commitment, promise
+优待#yōudài#give preferential treatment
+周到#zhōudào#thorough
+长岛#zhǎngdǎo#Long Island
+挑战#tiǎozhàn#challenge
+连#lián#in a row; even
+脸#liǎn#face
+带红#dài hóng#blush
+纪录#jìlù#record
+打破#dǎpò#break (record)
+永远#yǒngyuǎn#eternally
+气度#qìdù#bearing
+喝酒#hējiǔ#drink alcohol
+输#shū#lose
+征服#zhēngfú#conquer
+雄性#xióngxìng#male
+雄性激素#xióngxìng jīsù#androgens
+培养#péiyǎng#cultivate; build
+肌肉#jīròu#muscle
+雌性#cíxìng#female
+雌性激素#cíxìng jīsù#estrogen
+抚育#fǔyù#raise
+后代#hòudài#offspring; later generations
+天生#tiānshēng#inborn; inherent
+臭#chòu#lousy, disgusting
+私#sī#private
+领导#lǐngdǎo#leader
+处处#chùchù#in every way
+刺#cì#thorn
+合作#hézuò#cooperate
+技能#jìnéng#skill
+不成#bùchéng#doesn’t work
+人身#rénshēn#person, personal
+攻击#gōngjí#attack
+多余#duōyú#superfluous
+迟早#chízǎo#sooner or later
+乌鸦#wūyā#crow
+嫌#xián#dislike; despise
+呗#bei#??
+理喻#lǐyù#reasonable
+晕倒#yūndǎo#faint
+估计#gūjì#reckon, suspect
+出血#chūxuè#bleed
+导致#dǎozhì#lead
+下腹#xiàfù#lower abdomen
+坠#zhuì#fall
+胀#zhàng#swell, expand
+误#wù#mistake; erroneous
+拉肚子#lādùzi#diarrhea
+直接#zhíjiē#direct
+敢#gǎn#dare
+松懈#sōngxiè#relaxed
+签字#qiānzì#sign one’s name
+后续#hòuxù#follow-up
+出#chū#pay
+胎囊#tāi náng#fetal sac
+狭#xiá#narrow
+部#bù#part 
+功能#gōngnéng#function
+受到#shòudào#suffer from
+损伤#sǔnshāng#damage
+助手#zhùshǒu#assistent
+细#xì#thin, fine
+意识#yìshí#realize; consciousness
+严重性#yánchóngxìng#seriousness
+城市#chéngshì#city 
+打工#dǎgōng#work
+乡下#xiāngxià#countryside
+侧#cè#side
+留下#liúxià#leave
+阴影#yīnyǐng#shadow
+象征#xiàngzhēng#symbol
+完整#wánzhěng#completeness, intactness
+黄土#huángtǔ#dirt, lice
+埋#mái#bury; hide
+脖#bózi#neck
+孙子#sūnzi#grandson
+阑#lán#late
+尾#wěi#tail, end
+炎#yán#inflammation; scorching
+阑尾炎#lánwěiyán#appendicitis
+处#chù#place
+撒#sā#let go; lose control of oneself
+倒是#dǎoshì#then, but
+脑外科#nǎo wàikē#brain surgery
+所#suǒ#place
+狠#hěn#hard, ruthless 
+成为#chéngwéi#become
+当成#dàngchéng#regard, treat
+看待#kàndài#regard
+遭受#zāoshòu#suffer
+不公平#bù gōngpíng#unfair
+视#shì#look at
+若#ruò#be like; if
+睹#dǔ#see
+视若无睹#shìruòwúdǔ#turn a blind eye
+等到#děngdào#until; when
+麻木#mámù#numb; insensitive
+套#tào#[sentence] ???
+这套说辞#zhè tào shuō cí#this rhetoric
+说服#shuōfú#persuade
+后悔#hòuhuǐ#regret
+年级#niánjí#year, grade
+烦#fán#trouble, bother
+当着#dāngzhe#in front of
+怨#yuàn#blame
+反倒#fǎndào#instead
+教训#jiàoxùn#teach; lesson
+惹#rě#provoke
+单位#dānwèi#unit
+辞职#cízhí#resign
+顽固#wángù#obstinate
+道歉#dàoqiàn#apologize
+养病#yǎngbìng#cure oneself
+叔叔#shūshu#uncle
+检点#jiǎndiǎn#cautious; decent
+乱#luàn#chaos; promiscuity
+乱搞#luàn gǎo#have sex, sleep around
+例假#lìjià#period; public holiday
+忍#rěn#endure; tolerate
+强奸#qiángjiān#rape
+警#jǐng#police; alert
+报警#bàojǐng#report to the police
+取出#qǔchū#remove
+证据#zhèngjù#evidence
+保护#bǎohù#protect
+程序#chéngxù#procedure
+当事#dāngshì#involved
+感受#gǎnshòu#feel; impression 
+将来#jiānglái#(in the) future
+取证#qǔzhèng#collect evidence 
+过程#guòchéng#process
+一遍#yībiàn#one time
+一遍一遍地#yībiàn yī biàndì#over and over
+询问#xúnwèn#ask 
+经过#jīngguò#happen; course of events
+勇气#yǒngqì#courage
+一切#yīqiè#all
+害#hài#harm; kill
+同乡#tóngxiāng#fellow countryman/woman
+保佑#bǎoyòu#bless
+可爱#kě-ài#adorable
+请教#qǐngjiào#consult
+育儿书#yù-ér shū#parenting books 
+恶#è#evil; ferocious
+恶补#èbǔ#to study or practise intensively
+再接再厉#zàijiēzàilì#persevere
+综艺节目#zōngyì jiémù#variety show
+摇#yáo#shake
+滚#gǔn#roll; get lost; boil
+摇滚#yáogǔn#rock and roll
+四处#sìchù#everywhere
+奔波#bēnbō#dash around
+刷#shuā#browse; brush
+组#zǔ#group
+兴趣#xìngqù#interest
+敲#qiāo#knock
+鬼#guǐ#ghost
+似#shì#be like; apparently
+好心#hǎoxīn#kindness
+重要#chóngyào#important
+逻辑#luójí#logic
+站#zhàn#stand
+边#biān#side
+整理#zhěnglǐ#sort out
+良心#liángxīn#conscience
+只有#zhǐyǒu#only
+急诊#jízhěn#emergency treatment
+不明#bùmíng#unknown
+细菌#xìjùn#germ
+扫兴#sǎoxìng#buzzkill
+傻#shǎ#stupid
+鼎鼎#dǐngdǐng#famous
+神外#shénwài#extraordinary, extra-Godly
+上台#shàngtái#appear on stage
+肿瘤#zhǒngliú#tumor
+照理#zhàolǐ#as a rule; as a matter of fact
+消毒#xiāodú#sterilization
+等级#děngjí#level, grade
+方式#fāngshì#way, manner
+择#zé#choose
+紧急#jǐnjí#urgent
+颅#lú#skull
+闪失#shǎnshī#accident
+神之#shén zhī#God‘s
+正常#zhèngcháng#normal
+挺住#tǐngzhù#make it, survive
+据说#jùshuō#it is said that
+脑瘤#nǎoliú#brain tumor
+位置#wèizhì#position
+刁钻#diāozuān#tricky; cunning
+亲自#qīnzì#personally
+高手#gāoshǒu#expert
+享受#xiǎngshòu#enjoy, enjoyment
+切除#qiēchú#excise
+接近#jiējìn#approach; near
+额#é#forehead
+叶#yè#leaf 
+额叶#é yè#frontal globe
+核#hé#core
+硬核#yìnghé#hardcore
+脐#qí#navel
+脐带#qídài#umbelical cord
+异常#yìcháng#abnormal, unusual
+由于#yóuyú#since
+足月#zúyuè#full term
+健全#jiànquán#sound
+并#bìng#at the same time
+排除#páichú#exclude
+并不排除#bìng bù páichú#it is not excluded
+畸形#jīxíng#deformed
+并发#bìngfā#happen simutaneously
+发育#fāyù#develop
+健康#jiànkāng#healthy 
+嫌弃#xiánqì#dislike (cold-shoulder)
+健#jiàn#strengthen; be good at
+抛弃#pāoqì#abandon
+尿不湿#niàobùshī#diaper
+奶瓶#nǎipíng#baby bottle
+提前#tíqián#in advance
+认真#rènzhēn#serious
+撑#chēng#hold on
+窘迫#jiǒngpò#very poor
+报名#bàomíng#sign up
+直播#zhíbò#broadcast live
+切掉#qiēdiào#cut off; amputate
+组织#zǔzhī#tissue; organize
+幅度#fúdù#range
+精彩#jīngcǎi#wonderful
+难度#nándù#level of difficulty
+保持#bǎochí#maintain
+开黑#kāi hēi#playing (hacking)
+养#yǎng#recuperate
+伤#shāng#injury 
+恩情#ēnqíng#great kindness
+自称#zìchēng#call oneself
+羡慕#xiànmù#admire; envy
+考大学#kǎo dàxué#college entry exam
+见识#jiànshì#experience
+犯#fàn#criminal; violate
+强奸犯#qiángjiān fàn#rapist
+保存#bǎocún#preserve
+乳名#rǔmíng#pet name
+姨#yí#aunt
+烫#tàng#very hot; scold
+兵#bīng#soldier
+嘴笨#zuǐbèn#stupid; awkward-talking
+胡说八道#húshuō-bādào#talking nonsense
+链#liàn#chain
+传奇#chuánqí#legend
+响#xiǎng#loud
+剪#jiǎn#cut; scissors
+想到#xiǎngdào#expect
+啪#pā#Bounce!
+踹#chuài#kick
+抖#dǒu#shake, shiver
+差点#chàdiǎn#almost
+尴尬#gāngà#embarrassing, awkward
+场面#chǎngmiàn#scene
+性格#xìnggé#personality
+想不开#xiǎngbùkāi#desperate; be unable to think of anything else
+自杀#zìshā#commit suicide
+车祸#chēhuò#car accident
+瞧#qiáo#look
+成功#chénggōng#successful; success
+赶得及#gǎndéjí#be able to do it in time
+逢#féng#come across
+天命#tiānmìng#fate
+猜#cāi#guess, suspect
+请客#qǐngkè#treat
+拍#pāi#beat; shoot; flatter
+屁#pì#wind, fart; meaningless
+拍马屁#pāimǎpì#flattery
+胡说#húshuō#talk nonsense
+出轨#chūguǐ#cheat; derail
+胡闹#húnào#bullshit
+当众#dāngzhòng#publicly
+谣言#yáoyán#hearsay
+刽#guì#cut off
+子#zi#son
+刽子手#guìzishǒu#executioner
+挖#wā#dig 
+月份#yuèfèn#month
+歌声#gēshēng#singing, voice
+醒#xǐng#wake up
+移植#yízhí#transplant
+取消#qǔxiāo#cancel
+练习#liànxí#practice
+上手#shàngshǒu#start
+跳#tiào#jump, bounce
+妨碍#fáng-ài#obstruct
+病历#bìnglì#medical record
+保管#bǎoguǎn#take care of; storekeeper
+全国#quánguó#nationwide
+皆#jiē#all
+知#zhī#know; knowledge
+库房#kùfáng#storage room
+重地#zhòngdì#military exclusion zone
+食堂#shítáng#canteen
+弄#nòng#make; lane
+喜酒#xǐjiǔ#wedding reception
+主见#zhǔjiàn#opinion
+催#cuī#hurry, speed up
+催产#cuīchǎn#induce labor
+催产素#cuīchǎn sù#oxytocin
+估算#gūsuàn#guess
+属于#shǔyú#belong to
+迹象#jīxiàng#indication
+耗#hào#use; dawdle
+官方#guānfāng#official
+糊弄#hùnong#fool; make do with
+病床#bìngchuáng#hospital beds
+提高#tígāo#raise, increase
+流#liú#flow, spread
+率#lǜ#rate
+流转率#liúzhuàn lǜ#turnover rate
+效率#xiàolǜ#efficiency
+要求#yāoqiú#demand, request
+无理#wúlǐ#unreasonable
+确实#quèshí#true; really
+丈夫#zhàngfū#husband
+做主#zuòzhǔ#decide
+憋#biē#suppress; feel suffocated
+屈#qū#bend; wrong; injustice
+强硬#qiángyìng#tough
+蛮#mán#rough
+讲理#jiǎnglǐ#be reasonable
+体会#tǐhuì#come to understand
+追求#zhuīqiú#seek, chase after
+下场#xiàchǎng#end; go off stage
+临#lín#be about to; face
+临产#línchǎn#about to give birth
+资格#zīgé#qualifications
+住院部#zhùyuàn bù#Inpatient Department
+聚#jù#get together; amass
+聚餐#jùcān#have a dinner party
+天真#tiānzhēn#naive; innocent
+宫缩#gōngsuō#contraction
+缓解#huǎnjiě#alleviate
+疼痛#téngtòng#pain
+托#tuō#entrust; rely on
+托人#tuō rén#pull strings
+黑#hēi#black; wicked
+疏通#shūtōng#mediate; dredge
+坐月子#zuò yuèzi#stay in bed after delivery
+恨不得#hènbudé#be eager to
+隔离#gélí#isolate; quarantine
+接触#jiēchù#come into contact with
+糊涂#hútú#confused; chaotic
+动静#dòngjìng#movement; sound
+紫#zǐ#purple
+告赢#gào yíng#win a lawsuit
+合法#héfǎ#legal
+容器#róngqì#container
+在乎#zàihū#care
+句#jù#sentence
+塑造#sùzào#shape; model
+妥协#tuǒxié#compromise
+实习#shíxí#practice
+首席#shǒuxí#chief
+执行#zhíxíng#carry out
+官#guān#official; organ
+首席执行官#shǒuxí zhíxíng guān#CEO
+替代#tìdài#replace
+董事#dǒngshì#director
+信#xìn#believe
+锻炼#duànliàn#toughen, work out
+争气#zhēngqì#sturdy; strive for excellence
+愣#lèng#insistently
+职场#zhíchǎng#workplace
+替#tì#replace
+主持#zhǔchí#take care of
+某#mǒu#a certain
+强过#qiángguò#stronger
+边缘#biānyuán#marginal; edge
+边缘化#biānyuán huà#marginalize 
+奋斗#fèndòu#fight
+付#fù#hand over, pay
+诸#zhū#all
+流水#liúshuǐ#running water
+夭折##
+下来#xiàlái#be harvested; come down
+副#fù#[pair]
+公事#gōngshì#official business
+公办#gōngbàn#work
+真实#zhēnshí#truth; true
+发烧#fāshāo#fever
+血管#xuèguǎn#blood vessel
+流淌#liútǎng#flow
+清醒#qīngxǐng#clear-headed
+思考#sīkǎo#think
+含#hán#contain
+可乐#kělè#Coke
+倍#bèi#times
+点数#diǎnshù#number of points
+夫妻#fūqī#husband and wife
+双方#shuāngfāng#both sides
+疾病#jíbìng#disease
+不止#bùzhǐ#more 
+罕见#hǎnjiàn#rare
+遗传#yíchuán#inherit
+进一步#jìnyībù#further
+检测#jiǎncè#determine
+是否#shìfǒu#whether
+存在#cúnzài#exist
+印记#yìnjì#imprinted
+来自#láizì#come from
+过度#guòdù#excessive
+表达#biǎodá#express
+沉默#chénmò#be silent; taciturn
+常见#chángjiàn#common
+序#xù#order, sequence; preface
+测序#cèxù#sequencing
+全外显子的测序#quán wài xiǎn zǐ de cèxù#whole exome sequencing
+诊断#zhěnduàn#diagnose
+完全#wánquán#complete, completely
+论文#lùnwén#paper, dissertation
+综合#zònghé#synthesize; comprehensive
+综合征#zònghézhēng#syndrom
+流行病#liúxíng bìng#epidemic
+自然#zìrán#nature
+关于#guānyú#on 
+过分#guòfèn#excessive
+焦虑#jiāolǜ#anxious 
+豺狼#cháiláng#jackal
+保险起见#bǎoxiǎn qǐjiàn#as a precaution
+打架#dǎjià#have a fight
+上风#shàngfēng#advantage; windward
+抑制#yìzhì#inhibit, control
+抑制住#yìzhìzhù#suppress
+错误#cuòwù#wrong; mistake
+近亲#jìnqīn#be closely related
+概率#gàilǜ#probability
+动不动#dòngbùdòng#often 
+心脏#xīnzàng#heart
+想通#xiǎngtōng#figure out
+其实#qíshí#actually, in fact
+惦记#diànjì#think about
+邻居#línjū#neighbor
+可笑#kěxiào#ridiculous, funny
+岳父#yuèfù#father-in-law
+岳母#yuèmǔ#mother-in-law
+一阵儿#yīzhèn er#for a while
+迷上#mí shàng#hooked
+摄影#shèyǐng#take a photo; photography
+全套#quántào#full set
+镜#jìng#mirror; lens
+镜头#jìngtóu#camera lens; shot
+领#lǐng#take s.o.
+玻璃#bōlí#glass
+遭殃#zāoyāng#suffer
+赔#péi#make good 
+有情#yǒuqíng#affectionate
+有义#yǒu yì#righteous
+男子汉#nánzǐhàn#man
+肩#jiān#shoulder
+同期#tóngqí#peer
+联合#liánhé#unite; joint
+梗#gěng#obstruct
+脑梗#nǎo gěng#cerebral infarction
+署名#shǔmíng#sign
+作者#zuòzhě#author
+甭#béng#not need
+珍惜#zhēnxī#cherich
+懂事#dǒngshì#reasonable; sensible
+友爱#yǒu-ài#friendly
+准#zhǔn#allow
+公#gōng#male
+酷#kù#cool
+强悍#qiánghàn#tough; valiant
+允许#yǔnxǔ#allow
+胖#pàng#fett
+偷偷#tōutōu#secretly
+灶#zào#cooker, stove
+小灶#xiǎozào#extra food
+粮#liáng#food
+绝#jué#cut off
+绝育#juéyù#sterilize
+剥夺#bōduó#strip of
+权利#quánlì#right
+流浪#liúlàng#roaming
+人道#réndào#human
+主义#zhǔyì#doctrine
+关怀#guānhuái#being concerned
+免#miǎn#avoid
+遭#zāo#suffer
+生殖#shēngzhí#reproduce
+器官#qìguān#organ
+困扰#kùnrǎo#trouble
+总#zǒng#after all
+笼子#lóngzi#cage
+坚决#jiānjué#resolute
+同志#tóngzhì#comrade
+告辞#gàocí#take leave
+青铜#qīngtóng#bronze
+瞎#xiā#blind; wasted
+实在#shízài#really; honest
+差点#chàdiǎn#not good enough
+至于#zhìyú#as for ??
+横#héng#horizontal
+眉#méi#eyebrow
+横眉#héngméi#scowl 
+竖#shù#vertical; erect 
+熬#áo#endure; stew
+硕#shuò#large
+硕博#shuò bó#master’s degree
+硕博连读#shuò bó lián dú#Master and doctoral program
+嫡系#díxì#direct (line of descent)
+适应#shìyìng#adapt
+节奏#jiézòu#rhythm 
+告个别#gào gèbié#say goodbye
+私立#sīlì#private
+考进#kǎo jìn#be admitted
+混#hùn#pass off; mix
+光#guāng#light; glory
+光环#guānghuán#aura
+发扬光大#fāyángguāngdà#promote
+本事#běnshì#ability
+只好#zhǐhǎo#have to
+女婿#nǚxù#son-in-law
+敞#chǎng#spacious; be open
+敞开#chǎngkāi#wide open
+翻#fān#turn over; rummage
+可怜#kělián#pitiful
+莫#mò#nothing, nobody, not
+莫名其妙#mòmíngqímiào#explicably, somehow
+胡思乱想#húsīluànxiǎng#imagine things
+活#huó#live; keep alive
+卸货#xièhuò#unload
+查房#chá fáng; visite#
+实话#shíhuà#truth
+推#tuī#push
+会闹#huì nào#make trouble
+咬定#yǎodìng#insist
+大夫#dàfū#doctor
+等于#děngyú#equal, be equivalent to
+命运#mìngyùn#fate
+掌握#zhǎngwò#control
+摆#bǎi#arrange
+压迫#yāpò#oppress
+暴#bào#violent, brutal
+人出了事#rén chū liǎo shì#something happens
+视而不见#shì-érbùjiàn#close both eyes
+高层#gāocéng#executive
+中层#zhōngcéng#middle management
+谈判#tánpàn#negotiate
+漫天#màntiān#outrageous, filling the sky
+漫天要价#màntiān yàojià#ask fantasy prices 
+狮#shī#lion
+出面#chūmiàn#come out
+稍微#shāowēi#a little
+腰#yāo#waist
+胰#yí#pancreas
+胰岛素#yídǎosù#insulin
+海洛因#hǎiluòyīn#heroin
+瞎说#xiāshuō#nonsense
+到头来#dàotóulái#in the end
+打针#dǎzhēn#give an injection
+纯#chún#pure
+属#shǔ#be under; category
+剂量#jìliàng#dosage
+叫做#jiàozuò#be called
+疯子#fēngzi#crazy; lunatic
+假药#jiǎ yào#fake medicine 
+反应#fǎnyìng#reaction, response
+混蛋#húndàn#bastard; idiot
+出事#chūshì#have an accident
+约法#yuēfǎ#agreement
+章#zhāng#article, chapter
+琐事#suǒshì#triviality
+刚好#gānghǎo#just right; luckily
+并购#bìnggòu#Mergers and Acquisitions
+价格#jiàgé#price
+错过#cuòguò#miss
+时期#shíqí#period
+互相#hùxiāng#mutually
+支持#zhīchí#support
+双赢#shuāngyíng#win-win
+婚姻#hūnyīn#marriage
+先兆#xiānzhào#indicate
+按#àn#according
+利用#lìyòng#use
+骨头#gǔtou#bone; character
+良好#liánghǎo#good
+全力#quánlì#all one’s strength
+力气#lìqì#strength
+一心#yīxīn#wholeheartedly
+保温箱bǎowēn xiāng#incubator#
+怀疑#huáiyí#suspect; doubt
+闭嘴#bì zuǐ#shut up
+结实#jiēshi#strong
+副总#fù zǒng#vice president
+家伙#jiāhuo#guy; tool, weapon
+康复#kāngfù#recover
+开拓#kāità#open up
+海外#hǎiwài#overseas
+放宽#fàngkuān#relax
+哪怕#nǎpà#no matter
+软饭男#ruǎn fàn nán#softie (soft rice man)
+喂#wèi#feed
+乳#rǔ#breast; milk
+母乳#mǔrǔ#breast-feeding
+糟#zāo#rotten, messy
+使用#shǐyòng#use
+保住#bǎozhù#save, preserve
+不得不#bùdé bù#have no other choice
+抗#kàng#resist; refuse
+抗生素#kàngshēngsù#antibiotics
+防止#fángzhǐ#prevent
+感染#gǎnrǎn#infection
+要强#yàoqiáng#competitive
+不至于#bù zhìyú#be unlikely
+摸#mō#touch; stroke
+虑#lǜ#concern; think about
+按照#ànzhào#according
+眼泪#yǎnlèi#tear
+晃#huǎng#flash past; dazzle
+不如#bùrú#not be as good as
+伤心#shāngxīn#sad
+保安#bǎo-ān#security guard
+轰#hōng#take away; eject
+立即#lìjí#immediately
+心跳#xīntiào#heartbeat
+减弱#jiǎnruò#attenuated
+按压#ànyā#press
+通#tōng#open; connect with, inform
+降#jiàng#drop; reduce
+消失#xiāoshī#vanish
+宣告#xuāngào#proclaim
+死亡#sǐwáng#death; die
+其中#qízhōng#among which
+失血#shīxuè#bleeding
+失败#shībài#fail
+实行#shíxíng#perform; put into practice
+切除术#qiēchú shù#resection
+不当#bùdāng#inappropriate
+强烈#qiángliè#intense
+细致#xìzhì#meticulously
+引#yǐn#lead; cause
+戒#jiè#warning
+角度#jiǎodù#point of view; angle
+重视#zhòngshì#attach importance to 
+自责#zìzé#self-reproach
+阻断#zǔduàn#block
+说不定#shuō bu dìng#possibly; maybe
+悲剧#bēijù#tragedy
+欣喜#xīnxǐ#joyful
+表现#biǎoxiàn#perform
+作为#zuòwéi#as
+奖励#jiǎnglì#reward
+艾滋病#àizībìng#AIDS
+散会#sànhuì#end a meeting
+翻译#fānyì#translate
+资料#zīliào#material
+相当#xiāngdāng#match, appropriate 
+相当于#xiāngdāng yú#equivalent
+替换(掉)#tìhuàn (diào)#replace
+丧#sàng#lose; funeral
+狂#kuáng#crazy, wild
+丧心病狂#sàngxīnbìngkuáng#frenzied
+鄙视#bǐshì#despise
+爱情#àiqíng#love
+如此#rúcǐ#so
+漠视#mòshì#ignore
+友情#yǒuqíng#friendship 
+六亲不认#liùqīnbùrèn#not recognizing one's own (six) relatives
+终老#zhōnglǎo#old days
+打雷#dǎléi#thunder
+劈#pī#strike, chop, split
+瞬间#shùnjiān#moment, second
+或许#huòxǔ#perhaps
+通过#tōngguò#by means of
+扶持#fúchí#support
+不堪#bùkān#cannot stand; extreme
+离婚#líhūn#divorce
+为难#wéinán#embarassed; make things difficult for
+干脆#gāncuì#just; direct
+非#fēi#not be
+相#xiāng#mutually; evaluate
+担当#dāndāng#responsible; take on
+思想#sīxiǎng#thought; idea
+负担#fùdān#bear; burden
+致#zhì#result in, cause; send
+变异#biànyì#variation
+不幸#bùxìng#unfortunately
+确诊#quèzhěn#diagnose
+病例#bìnglì#cased
+植入#zhírù#implantation
+会诊#huìzhěn#consult
+强壮#qiángzhuàng#strong
+防护#fánghù#protect
+用具#yòngjù#tool
+沾#zhān#stick; moisten; touch
+后退#hòutuì#retreat, step back
+冲#chōng#rush forward; clash
+本能#běnnéng#instinct
+抑制住#yìzhìzhù#hold back
+肺部#fèibù#lung
+动用#dòngyòng#use
+阵#zhèn#battle formation
+仗#zhàng#be armed; battle
+重度#zhòngdù#severe
+活着#huózhe#alive
+产检#chǎnjiǎn#maternity check-ups
+躲#duǒ#hide
+藏#cáng#hide
+退#tuì#bring down; quit
+转到#zhuǎndào#transfer
+传染#chuánrǎn#infection; infect
+早期#zǎoqí#early stage
+服用#fúyòng#take
+药物#yàowù#medicine; drug
+肺炎#fèiyán#pneumonia
+预料#yùliào#predict
+吸#xī#draw in; suck
+腹腔#fùqiāng#abdominal cavity
+侵犯#qīnfàn#invasion; infringement (copyright)
+胸#xiōng#chest
+物品#wùpǐn#article
+造成#zàochéng#cause
+物#wù#thing; produce; creature
+物竞天择#wù jìng tiān zé#natural selection 
+现象#xiànxiàng#pheomenon
+母体#mǔtǐ#the body of the mother
+淘汰#táotài#eliminate
+染#rǎn#dye
+染色#rǎnsè#dyeing
+染色体#rǎnsètǐ#chromosome
+原本#yuánběn#eigentlich
+见到#jiàndào#see; catch sight of
+客观#kèguān#objective
+具备#jùbèi#have
+质#zhì#nature, quality; matter
+特质#tèzhì#characteristic
+首先#shǒuxiān#first
+怪#guài#blame
+岔#chà#accident; fork; diverge
+出岔#chūchà#go wrong
+收起来#shōu qǐlái#put away
+故意#gùyì#deliberately
+狠毒#hěndú#cruel
+情节#qíngjié#plot
+瞎#xiā#blind, wasted
+编#biān#weave; organize; edit
+瞎编#xiā biān#make up
+激烈#jīliè#intense; fierce
+互#hù#mutual
+助#zhù#help
+自私#zìsī#selfish
+过街#guòjiē#cross the road
+鼠#shǔ#rat
+指#zhǐ#finger
+观察#guānchá#observe
+产程#chǎnchéng#delivery process
+颈#rào#neck
+周#zhōu#week; circle, loop
+腹部#fùbù#abdominal
+脂肪#zhīfáng#fat
+厚#hòu#thick
+过厚#guò hòu#too thick
+切口#qièkǒu#cut
+愈合#yùhé#heal up
+液化#yèhuà#liquefied
+引流#yǐnliú#drainage
+疤痕#bāhén#scar
+胎盘前置#tāipán qián zhì#placenta praevia
+覆盖#fùgài#cover
+宫颈#gōngjǐng#cervix
+极#jí#extremely
+薄#báo#thin
+壁#bì#wall
+正好#zhènghǎo#right at
+严密#yánmì#close, tight
+延长#yáncháng#extend
+胎盘植入#tāipán zhí rù#placenta accreta
+原因#yuányīn#reason
+多米尼加#duōmǐníjiā#Dominica
+巴西#bāxī#Brazil
+直到#zhídào#until
+百分之#bǎi fēn zhī#percent
+卫生组织#wèishēng zǔzhī#Health Organization
+给予#jǐyǔ#give
+设置#shèzhì#set up
+警戒#jǐngjiè#warn; alert
+警戒线#jǐngjiè xiàn#alert line
+开放#kāifàng#open; bloom
+高危#gāowēi#high-risk
+大量#dàliàng#large amount of; generous
+增加#zēngjiā#increase
+各种#gè zhǒng#all sorts of
+程度#chéngdù#level, extent
+病患#bìng huàn#patient
+紧张#jǐnzhāng#nervous; intense
+治#zhì#cure; control; exterminate; punish
+专门#zhuānmén#especially
+既然#jìrán#since
+精力#jīnglì#energy
+额外#éwài#additional
+分担#fēndān#share responsibility
+安排#ānpái#arrange
+凭#píng#no matter; rely on; evidence
+凭什么#píng shénme#for what reason
+况且#kuàngqiě#besides
+用人#yòngrén#make the best use of staff
+值#zhí#be on duty; value
+两口#liǎngkǒu#couple
+偏向#piānxiàng#favor
+刻苦#kèkǔ#hardworking
+地步#dìbù#extent; state, situation
+倒背如流#dàobèirúliú#memorize; know by heart (so well that you can recite it backwards)
+对外#duìwài#external 
+提升#tíshēng#promote; upgrade
+床位#chuángwèi#bed
+科室内#kē shìnèi#department
+秒#miǎo#second
+停歇#tíngxiē#stop, rest
+差错#chācuò#mistake; accident
+担保#dānbǎo#guarantee
+留情#liúqíng#show mercy
+菩萨#púsà#bodhisattva, saint
+苦#kǔ#miserable; suffer from
+断档#duàndàng#out of stock; discontinue
+人才#réncái#talent
+掰#bāi#break off
+扯#chě#pull, tear
+毛#máo#hair
+蒜#suàn#garlic
+皮#pí#skin, leather
+鸡毛蒜皮#jīmáosuànpí#trivial think
+岌#jí#perilous
+岌岌可危#jíjíkěwéi#precarious
+@002+3##
+打听#dǎtīng#ask about
+婵娟#chánjuān#beautiful; moon
+条件#tiáojiàn#condition
+所有#suǒyǒu#own
+生怕#shēngpà#worry
+薪#xīn#firewood; salary
+杯水车薪#bēishuǐchēxīn#a drop in the ocean
+接管#jiēguǎn#take over
+负责#fùzé#be responsible
+得逞#déchěng#succeed
+可怕#kěpà#frightening
+也说不定呢#yě shuō bu dìng ne#maybe
+岗位#gǎngwèi#post (work)
+胜算#shèngsuàn#odds of winning
+选手#xuǎnshǒu#player, contestant
+动力#dònglì#power, strength
+怨恨#yuànhèn#hold a grudge against
+快乐#kuàilè#happiness, happy
+得到#dédào#get
+信心#xìnxīn#confidence; faith
+拱手#gǒngshǒu#cup one’s hand
+着想#zhuóxiǎng#care about; consider
+乖#guāi#well-behaved; clever
+结构#jiégòu#structure; composition
+主人#zhǔrén#owner; master
+糙#cāo#careless; harsh
+纸箱#zhǐxiāng#cardboard box
+野#yě#wild
+前台#qiántái#reception
+三甲#sānjiǎ#triple A
+挂号#guàhào#registration
+兽医#shòuyī#vet
+值钱#zhíqián#have a value
+执业#zhíyè#practice (job)
+救治#jiùzhì#save
+价值#jiàzhí#value
+护理#hùlǐ#care; nurse
+商业#shāngyè#commercial, commerce
+交代#jiāodài#hand over
+药品#yàopǐn#medicine
+系统#xìtǒng#system
+前阵子#qián zhènzi#recently
+挣#zhēng#earn
+宽裕#kuānyù#well-off; ample, good
+万不得已#wànbùdéyǐ#as a last resort
+奖学金#jiǎngxuéjīn#scholarship
+工地#gōngdì#construction site
+垫#diàn#pay; cushion 
+饭卡#fàn kǎ#meal card
+汉堡#hànbǎo#hamburger
+味道#wèidào#taste
+想不到#xiǎngbùdào#not expect
+困难#kùnnán#difficult; poor
+到处#dàochù#everywhere, all places
+坟#fén#grave
+双全#shuāngquán#both
+去世#qùshì#pass away
+后来#hòulái#afterwards
+供#gōng#provide, supply
+辍学#chuòxué#give up one’s studies
+宗#zōng#ancestor; clan
+耀#yào#shine; radiance
+祖#zǔ#ancestor; grandparent
+光宗耀祖#guāngzōngyàozǔ#bring glory to one’s ancestors
+赚钱#zhuànqián#make money
+债务#zhàiwù#debt
+还清#huán qīng#pay off
+人情味#rénqíngwèi#human warmth
+原来#yuánlái#orginal, originally
+吃大亏#chī dà kuī#suffer a big loss
+计划#jìhuà#plannning, plan
+计划生育科#jìhuà shēngyù kē#family planning department
+剥离#bōlí#come off
+幸好#xìnghǎo#luckily
+粘连#zhānlián#adhesion
+膜#mó#membrane; film
+残留#cánliú#remain
+球囊#iú náng#balloon
+放进#fàng jìn#put into
+腔#qiāng#cavity
+止#zhǐ#stop
+业务#yèwù#profession
+摆#bǎi#put
+哲学#zhéxué#philosophy
+辩证#biànzhèng#dialectic(s)
+演绎#yǎnyì#deduction
+无私#wúsī#selfless
+爱心#àixīn#loving; affection
+广博#guǎngbó#broad, comprehensive
+深切#shēnqiè#deep, heartfelt
+伦理#lúnlǐ#ethical, ethics
+单一#dānyī#single
+肤浅#fūqiǎn#superficial
+悖#bèi#be contrary to
+逆#nì#go against; adverse
+悖逆#bèinì#rebellious
+扒拉#bāla#brush (pick up and pull)
+段#duàn#section, paragraph
+共事#gòngshì#work together
+彼此#bǐcǐ#both sides
+名牌#míngpái#famous name
+学生会#xuéshēnghuì#student union
+主席#zhǔxí#president
+头脑#tóunǎo#intelligent
+重点#zhòngdiǎn#key point
+前途#qiántú#future
+光明#guāngmíng#bright, light
+为止#wéizhǐ#until
+刺激#cìjī#provoke
+坏人#huàirén#bad people
+冷战#lěngzhàn#cold war
+替#tì#for; replace
+生物学#shēngwù#biology 
+团#tuán#ball
+细胞#xìbāo#cell
+科学家#kēxuéjiā#scientist
+阿胶#ējiāo#donkey-hide gelatin
+红枣#hóngzǎo#red dates
+和好#héhǎo#reconcile
+虚弱#xūruò#frail
+去气#qù qì#upset, piss off
+嘱咐#zhǔfù#urge; inculcate
+今日#jīnrì#today
+何必#hébì#why
+补上#bǔshàng#complement, complete
+馒头#mántou#steamed bun
+白开水#báikāishuǐ#plain boiled water
+瘦#shòu#thin, lean
+瘦一圈#shòu yī quān#lose weight
+饱#bǎo#full
+强度#qiángdù#intensity
+极其#jíqí#extremely
+行为#xíngwéi#behavior
+穿#chuān#pierce, pass through
+透#tòu#penetrate
+侵入#qīnrù#invade
+膀胱#pángguāng#bladder
+解剖#jiěpōu#anatomy
+结扎#jiézā#ligate
+表面#biǎomiàn#surface
+迅速#xùnsù#swift
+误伤#wùshāng#accidental injury
+旁#pán#side; beside
+骛#wù#distraction
+心无旁骛#xīnwúpángwù#be totally concentrated
+恩人#ēnrén#benefactor
+念书#niànshū#study
+懂事#dǒngshì#reasonable; mature
+丫头#yātou#girl, maid
+零工#línggōng#work part-time
+传递#chuándì#pass on; extend
+资助#zīzhù#aid financially
+大不了#dàbùliǎo#serious; at the worst
+发誓#fāshì#swear, vow
+cont.##
+走廊#zǒuláng#corridor
+欠#qiàn#owe
+野猫#yěmāo#wild cat
+寄生#jìshēng#be a parasite
+虫#chóng#insect
+死胎#sǐtāi#stillbirth
+冲#chōng#because
+毫#háo#tiny; fine hair; writing brush
+理性#lǐxìng#reason
+逃避#táobì#escape
+众#zhòng#crowd; numerous
+叛#pàn#betray
+众叛亲离#zhòngpànqīnlí#outcast
+嘴硬#zuǐyìng#stubborn
+亲眼#qīnyǎn#with one’s own eyes 
+年代#niándài#period, decade
+记忆#jìyì#remember; memory
+误差#wùchā#error
+杀手#shāshǒu#killer
+发生率#fāshēng lǜ#incidence
+泰斗#tàidǒu#leading authority
+肩膀#jiānbǎng#shoulder
+牢牢#láo láo#firmly
+卡在..里#kǎ zài..lǐ#stuck
+骨盆#gǔpén#pelvis
+四肢#sìzhī#limbs
+四肢着地#sìzhī zhuódì#on all fours
+会阴#huìyīn#perineal
+撕裂#sīliè#tear
+修补#xiūbǔ#mend
+轻松#qīngsōng#relaxing
+异样#yìyàng#strange, abnormal
+甚至#shènzhì#even
+创造#chuàngzào#establish; create
+突破#túpò#break through
+自我#zìwǒ#self
+嘘#xū#shush
+一口气#yī kǒu qì#at a stretch
+录下来#lùxiàlái#record
+恶魔#èmó#devil
+醉酒#zuìjiǔ#get drunk
+绷着#bēngzhe#tense, not relaxed
+倔#jué#stubborn
+手快#shǒukuài#quick (off the mark)
+臣服#chénfú#surrender; acknowledge allegiance to
+伟大#wěidà#great
+奠基#diànjī#lay the foundation
+感激#gǎnjī#grateful; appreciate
+遍#biàn#all over
+喜悦#xǐyuè#happy; joy
+背负#bèifù#carry on one’s back
+引来#yǐn lái#attract
+期待感#qídài gǎn#anticipation
+泡#pào#bubble
+超级#chāojí#super
+吉祥#jíxiáng#lucky; auspicious
+方案#fāng-àn#plan
+枕头#zhěntou#pillow
+扛#káng#shoulder
+幼稚#yòuzhì#childish; young, naive
+拍#pāi#shoot
+装备#zhuāngbèi#equipment
+防#fáng#prevent; defend
+扑#pū#beat; rush at
+主宰#zhǔzǎi#dominate
+惨#cǎn#tragic; severe, cruel
+酒后#jiǔhòu#in a drunken state
+清白#qīngbái#innocence; clean
+拆#chāi#tear open; dismantle
+损坏#sǔnhuài#damage
+警告#jǐnggào#warn
+弄死#nòngsǐ#kill
+味#wèi#smell, taste
+毫无#háowú#none; not at all
+规矩#guījǔ#well-behaved; norm
+礼数#lǐshù#ritual
+爹#diē#Dad
+教#jiào#teach
+斗#dou#fight
+激动#jīdòng#excite
+股#gǔ#[gas]
+灵#líng#effective
+洗澡#xǐzǎo#have a bath
+避孕#bìyùn#contraception
+药房#yàofáng#pharmacy
+效果#xiàoguǒ#effect; have an impact
+复合#fùhé#get back together
+随便#suíbiàn#casual; thoughtless
+急急忙忙#jí ji máng mang#in a hurry
+念#niàn#read
+功劳#gōngláo#contribution
+搭配#dāpèi#combine, pair up
+省心#shěng xīn#not need to worry
+秘诀#mìjué#secret
+坚定#jiāndìng#steadfast, firm
+前提#qiántí#premise, precondition
+信念#xìnniàn#belief
+迷路#mílù#to be lost
+转#zhuǎn#turn
+平常#píngcháng#usually
+家伙#jiāhuo#gosh
+地址#dìzhǐ#address
+闲情逸致#xiánqíngyìzhì#be in a carefree mood
+逸#yì#leisurely; escape 
+寻思#xúnsi#ponder
+直#zhí#straight
+得罪#dézuì#offend
+撮合#cuòhé#mediate; matchmake
+你们说不定#nǐmen shuō bu dìng#you might
+炒#chǎo#stir-fry; speculate
+快捷#kuàijié#quick
+开间房#kāijiān fáng#economy hotel ??
+铺#pù#lay; spread
+地铺#dìpù#on the floor
+吃苦#chīkǔ#put up with hardship
+惯#guàn#be used to
+屋顶#wūdǐng#roof
+投诉#tóusù#complain
+扣#kòu#deduct
+巧#qiǎo#skilful
+拙#zhuō#clumsy
+弄巧成拙#nòngqiǎochéngzhuō#be too clever for one’s own good
+书签#shūqiān#bookmark
+嘟嘟#dūdū#doodle
+细长#xìcháng#slender
+单眼皮#dānyǎnpí#single eyelid
+双眼皮#shuāng yǎnpí#double eyelid
+隔#dài#separate; be apart
+传#chuán#pass on; hand down
+敬业#jìngyè#be dedicated to one’s work
+忘掉#wàngdiào#forget
+轻易#qīngyì#easily, quickly
+无理取闹#wúlǐqǔnào#be deliberately provocative
+冷血#lěngxuè#cold-blooded
+无情#wúqíng#heartless
+调节#tiáojié#adjust
+缘分#yuánfèn#fate
+盼#pàn#hope for
+重心#zhòngxīn#center; core
+转移#zhuǎnyí#shift; change
+苦读#kǔ dú#study hard
+眼睁睁#yǎnzhēngzhēng#look helplessly
+坎#kǎn#ridge (obstacle) 
+抗#kàng#anti-
+抗排异#kàng pái yì#anti-rejection
+配#pèi#match
+型#xíng#type
+配型度#pèi xíng dù #matching degree
+神经#shénjīng#nerve
+外科#wàikē#surgery
+荣幸#róngxìng#honored
+海量#hǎiliàng#tolerance; magnanimity
+照常#zhàocháng#as usual
+冤#yuān#injustice; enmity
+冤魂#yuānhún#ghost of injustice
+污辱#wūrù#insult
+从此#cóngcǐ#after that
+相见#xiāng jiàn#see again, meet
+伙伴#huǒbàn#companion
+经常#jīngcháng#often
+罐头#guàntóu#tin
+顿#dùn#[meal]
+值班#zhíbān#be on duty
+孤独#gūdú#solitary
+收养#shōuyǎng#adopt
+改观#gǎiguān#take a new look
+遗弃#yíqì#abandon; desert
+窝#wō#nest; home
+铁#tiě#iron; weapon
+原谅#yuánliàng#forgive
+刮宫术#guāgōng shù#curettage
+猛#měng#fierce, brave; suddenly
+突飞猛进#tūfēiměngjìn#advance by leaps and bounds
+怨气#yuànqì#frustration
+隆重#lóngzhòng#solemn
+约翰·yuēhàn#John #
+招聘#zhāopìn#recruitment
+主攻#zhǔgōng#main
+主动#zhǔdòng#voluntary
+并且#Bìngqiě#and, also
+征求#zhǐqiú#solicit
+师#shī#teacher; division
+相处#xiāngchǔ#get along
+来头#láitóu#connections
+调#diào#transfer
+医务处#yīwù chù#medical office
+眼看#yǎnkàn#look on
+损害#sǔnhài#damage, hurt
+利益#lìyì#benefit
+抓#zhuā#tackle, take control; grab
+医患#yī huàn#doctors and patients
+批判#pīpàn#criticize
+私生活#sīshēnghuó#private life
+指手画脚#zhǐshǒuhuàjiǎo#pointing fingers, pick fault with
+丑恶#chǒu-è#ugly
+心灵#xīnlíng#soul; mind
+一而再再而三地#yī ér zài zài ér sān de#over and over again
+背#bèi#recite
+誓言#shìyán#oath
+前辈#qiánbèi#older generation
+辛#xīn#bitter; laborious
+获得#huòdé#obtain; gain
+成果#chéngguǒ#achievement
+知识#zhīshì#knowledge
+十分#shífēn#very
+传授#chuánshòu#pass on
+本人#běnrén#oneself
+采取#cǎiqǔ#adopt
+措施#cuòshī#measure
+正当#zhèngdàng#legitimate
+倾向#qīngxiàng#tendency; incline
+即#jí#namely; mean
+牢记#láojì#keep in mind
+尽管#jǐnguǎn#even though
+同情心#tóngqíng xīn#sympathy
+因此而#yīncǐ ér#and therefore
+羞愧#xiūkuì#ashamed
+人士#rénshì#figure, person
+请求#qǐngqiú#ask
+隐私#yǐnsī#privacy
+极为#jíwéi#extremely
+有关#yǒuguān#be about; be relevant
+经#jīng#through 
+感谢#gǎnxiè#thank
+无效#wúxiào#ineffective
+重大#zhòngdà#major; heavy
+应当#yīngdāng#should
+促使#cùshǐ#press for
+虚心#xūxīn#open-minded; humbly
+检讨#jiǎntǎo#examine
+不足#bùzú#insufficiency, shortcoming
+上帝#shàngdì#God
+罪恶#zuì-è#crime
+修改#xiūgǎi#alter
+版本#bǎnběn#edition
+牢牢#láo láo#firmly
+使命#shǐmìng#mission
+剧本#jùběn#script
+按#àn#press; push down
+显#xiǎn#be apparent; display
+保密#bǎomì#keep secret
+看不起#kànbùqǐ#look down on
+菜鸟#càiniǎo#rookie
+贿赂#huìlù#bribe
+漏#lòu#leak
+大便#dàbiàn#poop
+清理#qīnglǐ#clean, tidy up
+屎#shǐ#shit, excrement
+撕#sī#tear
+裂#liè#split
+会阴撕裂#huìyīn sī liè#perineal tear
+肛#gāng#anus
+光顾#guānggù#focus
+关爱#guān'ài#love; cherish
+感冒#gǎnmào#catch a cold
+吸#xī#absorb; aspiration
+痰#tán#sputum, phlegm
+便秘#biànmì#constipation
+通便#tōng biàn#laxative
+清洁工#qīngjié#cleaners
+拖#tuō#mop
+周围#zhōuwéi#around; vicinity 
+带教#dài jiào#teaching
+护工#hùgōng#nurse, caregiver
+欺#qī#bully
+绕#rào#(go) around
+智力#zhìlì#intelligence
+围#wéi#around
+围脖#wéibó#scarf
+搞笑#gǎoxiào#funny
+煮#zhǔ#boil
+塑料#sùliào#plastic
+调料#tiáoliào#seasoning
+摇晃#yáohuàng#shake
+做法#zuòfǎ#way; method
+街吃#jiē chī#street food 
+鼻涕#bítì#snot, mucus
+专心#zhuānxīn#concentrate
+亲#qīn#kiss
+罩#zhào#cover
+口罩#kǒuzhào#mask
+封#fēng#seal; envelope
+封印#fēngyìn#hide
+绝世#juéshì#exceptional, extreme
+颜#yán#face; color
+新晋#xīn jìn#newly promotoed 
+关照#guānzhào#kindness
+敞亮#chǎngliàng#light and spacious
+救死扶伤#jiùsǐfúshāng#save the dying and nurse the wounded
+扶#fú#help
+花样#huāyàng#variety; trick
+尊师重道#zūnshī zhòng dào#respect for teachers 
+工夫#gōngfū#time
+吸气#xīqì#breathe in
+憋住#biēzhù#hold back
+屏住#píng#hold; get rid of
+能量#néngliàng#energy
+喽#lóu#ajo
+严肃#yánsù#serious
+不咋地#bù zǎ de#not so good 
+爱玩#àiwán#playful
+硕#shuò#large
+用功#yònggōng#hardworking
+图书馆#túshūguǎn#library
+仗义#zhàngyì#loyal; righteous
+欺负#qīfù#bully
+宿舍#sùshè#dormitory
+抓住#zhuāzhù#catch
+揍#zòu#beat
+一顿揍#yī dùn zòu#beating
+心软#xīnruǎn#be soft-hearted
+发泄#fāxiè#vent
+标准#biāozhǔn#standard
+严#yán#strict
+虐#nüè#cruel
+虐狂#nüè kuáng#sadism
+般配#bānpèi#be well matched
+施#shī#carry out
+摆脱#bǎituō#break free from
+咨询#zīxún#seek advice from
+脊柱裂#jǐzhù liè#spina bifida
+脊#jǐ#spine; ridge
+柱#zhù#pillar
+又称#yòu chēng#also known as
+椎管#chuí guǎn#spinal canal 
+椎#chuí#vertebra
+闭合#bìhé#closed
+当中#dāngzhōng#during; among
+行动#xíngdòng#move about
+造成#zàochéng#cause
+积#jī#accumulation
+液#yè#fluid
+大小便#dàxiǎo biàn#urine and feces
+失禁#shījìn#incontinence
+障碍#zhàng'ài#retardation; obstacle
+几率#jīlǜ#probability
+把子宫#bǎ zǐgōng#uterine
+合上#héshàng#close
+长足月#chángzú yuè#grow to full term
+大人#dàrén#adult
+相比于#xiāng bǐ yú#compared to
+改善#gǎishàn#improve
+短期#duǎnqí#short term
+中期#zhōngqí#intermediate term
+结局#jiéjú#outcome
+裂口#lièkǒu#split
+晚期#wǎnqí#late period
+脊髓#jǐsuǐ#spinal cord
+髓#suǐ#marrow
+确保#quèbǎo#make sure
+何况#hékuàng#let alone, not to mention
+实现#shíxiàn#realize
+修复#xiūfù#repair
+背部#bèibù#back
+即使#jíshǐ#even if
+多学科#duō xuékē#multidisciplinary
+团队#tuánduì#team
+提供#tígōng#provide
+持续#chíxù#go on
+包括#bāokuò#include
+神经学#shénjīng xué#neurology
+泌尿学#mìniào xué#urology
+泌#mì#secrete 
+骨科#gǔkē#orthopedics
+共同#gòngtóng#common; together
+术语#shùyǔ#terminology
+费#fèi#spend
+残缺#cánquē#defect
+生命力#shēngmìnglì#vitality
+诉求#sùqiú#demand
+遗憾#yíhàn#regret
+恶语#èyǔ#talk badly about
+相向#xiāngxiàng#facing each other
+治愈率#zhìyù lǜ#cure rate
+一心想#yī xīn xiǎng#wholeheartedly
+夜宵#yèxiāo#late-night snack
+零食#língshí#snack
+后勤#hòuqín#logistics
+拜托#bàituō#count on
+母胎#mǔtāi#maternal-fetal
+医学#yīxué#medicine
+有为#yǒu wéi#promising
+建树#jiànshù#contribution
+无量#wúliàng#be boundless
+查阅#cháyuè#check out
+类似#lèisì#be similar
+露出#lùchū#expose
+定位#dìngwèi#position
+羊膜#yángmó#amniotic
+注入#zhùrù#inject
+人工#réngōng#artificial
+连接#liánjiē#connect
+饱和#bǎohé#be saturated 
+变化#biànhuà#change
+视野#shìyě#field of vision
+挡住#dǎngzhù#block; stop
+半路#bànlù#halfway 
+喘口气#chuǎn kǒu qì#catch one’s breath
+摄入#shèrù#take in
+咖啡因#kāfēi yīn#caffeine
+口渴#kǒukě#thirsty
+肌筋膜#jī jīn mó#muscle membrane
+筋#jīn#tendon
+硬脑膜#yìng nǎomó#dura mater
+皮肤#pífū#skin
+层#céng#layer
+缺损#quēsǔn#defect
+分离#fēnlí#separate
+侧面#cèmiàn#lateral; side; unofficial
+被称为#bèi chēng wèi#is called
+开口处#kāikǒu chù#opening
+在其周围#zài qí zhōuwéi#around
+形成#xíngchéng#form
+脊髓液#jǐsuǐ yè#spinal fluid
+渗漏#shènlòu#leak
+首#shǒu#[poem, music]
+莫扎特#mòzhātè#Mozart
+小夜曲#xiǎoyèqǔ#serenade
+宝贵#bǎoguì#valuable
+晕厥#yūnjué#faint, pass out
+倔强#juéjiàng#be stubborn
+按理#ànlǐ#normally
+结#jié#tie, knot
+调整#tiáozhěng#adjust; take care
+决心#juéxīn#determination
+欣慰#xīnwèi#satisfied
+贼#zéi#thief
+针脚#zhēnjiǎo#stitch
+娴熟#xiánshú#skill
+眼熟#yǎnshú#familiar
+限量#xiànliàng#limited
+明示#míngshì#express
+按时#ànshí#on time
+汇报#huìbào#report
+一阵子#yī zhènzi#for a while
+和谐#héxié#harmonious
+估摸#gūmo#reckon
+介意#jièyì#mind
+关#guān#concern
+研究#yánjiū#research
+瞧不上#qiáo bù shàng#despise, hate
+孝顺#xiàoshùn#show filial obedience
+鞋#xié#shoe
+正式#zhèngshì#official, formal
+瞅#chǒu#look at
+本身#běnshēn#herself
+惯#guàn#spoil
+壶#hú#pot
+来得及#láidéjí#have enough time for
+全新#quánxīn#brand new
+危机#wéijī#crisis
+奋力#fènlì#try their best
+学历#xuélì#educational background
+远#yuǎn#far, distant
+无限#wúxiàn#boundless
+弱项#ruòxiàng#weakness; Achilles‘ heel
+低下#dīxià#inferior
+偏#piān#biased
+如沐春风#rúmùchūnfēng#spring breeze brushing
+悉心#xīxīn#be careful
+助产士#zhùchǎnshì#midwife
+开心#kāixīn#happy
+尺#chǐ#ruler
+展示#zhǎnshì#reveal
+清晰#qīngxī#clear
+中肯#zhòngkěn#relevant
+抢#qiǎng#grab, rob
+增长#zēngzhǎng#increse
+怵#chù#fear
+抱紧#bào jǐn#hold tight
+拣#jiǎn#choose
+上劲#shàngjìn#make efforts
+陪#péi#assist
+指甲#zhǐjiǎ#nail
+涂#tú#apply; spread
+碘伏#diǎn fú#iodine
+失恋#shīliàn#lost in love
+减肥#jiǎnféi#do a diet
+仪式#yíshì#ceremony
+克服#kèfú#overcome
+弱点#ruòdiǎn#weakness
+热闹#rènào#lively
+隔壁#gébì#next (door)
+公公#gōnggōng#father-in-law
+抱#bào#hold in one’s arms
+伺候#cìhòu#serve
+家产#jiāchǎn#legacy; estate
+搁#gē#put
+闹心#nào xīn#upset
+开窍#kāiqiào#get it straight
+活#huó#work
+讲话#jiǎnghuà#speak
+的确#díquè#really
+面临#miànlín#face, be confronted
+碰到#pèng dào#encounter
+积累#jīlěi#accumulate
+基本#jīběn#basically
+动手#dòngshǒu#get to work
+在意#zàiyì#mind; care
+以上#yǐshàng#over
+单一#dānyī#only; single
+划分#huàfèn#divide
+归为#guīwèi#classify
+人群#rénqún#crowd
+糖尿病#tángniàobìng#diabetes
+歧视#qíshì#discrimination
+简单#jiǎndān#simple
+粗暴#cūbào#inaccurate; rough
+催生#cuīshēng#give birth
+懂事#dǒngshì#insightful
+夸#kuā#compliment, praise
+知足#zhīzú#humble
+破#pò#lousy
+批#pī#batch
+辞#cí#resign#
+双喜临门#shuāngxǐ-línmén#double happiness
+回避#huíbì#avoid (turn around)
+垃圾#lājī#trash
+违法#wéifǎ#illegal; break the law
+证#zhèng#license, certification
+上岗#shànggǎng#take up a post
+体检#tǐjiǎn#physical examination
+病菌#bìngjùn#bacteria 
+坐牢#zuòláo#be in prison
+稀里糊涂#xīlihútú#muddle-headed
+稀#xī#sparce; watery#
+丢#diū#throw away
+脱#tuō#take off
+有缘#yǒuyuán#be destined to meet
+老实#lǎoshí#honest
+手脚#shǒujiǎo#movement; sleight of hand
+麻利#máli#dexterous
+推荐#tuījiàn#recommend
+轮流#lúnliú#in turns
+素质#sùzhì#character
+骂人#màrén#scold
+不赖#bùlài#not bad
+赶上#gǎn shàng#catch up with
+大方#dàfāng#generous
+臀#tún#buttock
+相对#xiāngduì#relative; be opposite
+娩#miǎn#give birth
+破水#pòshuǐ#rupture of the membranes
+牵引#qiānyǐn#draw
+否则#fǒuzé#otherwise
+宫口#gōngkǒu#cervix#
+脱垂#tuō chuí#prolapse
+垂#chuí#hang down
+宫腔#gōng qiāng#uterine cavity
+胎位#tāiwèi#fetal position
+发生#fāshēng#happen 
+吃素#chīsù#be vegetarian
+噎#yē#choke
+锅#guō#pot, bowl
+一般#yībān#ordinary; same
+旅游#lǚyóu#trip
+姐夫#jiěfū#brother-in-law
+偏方#piānfāng#folk remedy
+文章#wénzhāng#implication
+算账#suànzhàng#get even with
+指桑骂槐#zhǐsāngmàhuái#hidden accuse
+桑#sāng#mulberry#
+槐#huái#Chinese scholar tree (Styphnolobium japonicum) 
+前段时间#qiánduàn shíjiān#some time ago
+魔#mó#demon
+无底洞#wúdǐdòng#bottomless pit
+洞#dòng#hole; cave
+假装#jiǎzhuāng#pretend
+丢脸#diūliǎn#lose face
+练手#liànshǒu#practice
+跩#zhuǎi#arrogant; swagger
+功夫#gōngfū#martial arts
+牛#niú#cow
+低调#dīdiào#low-key
+院士#yuànshì#academician, fellow
+全都#quándōu#all
+谦虚#qiānxū#modest
+不得了#bùdéle#incredible
+溜#liū#sneak off
+收缩#shōusuō#contract
+乏力#fálì#weak(ness)
+基础#jīchǔ#foundation, basis
+接手#jiēshǒu#take over
+痔疮#zhìchuāng#hemorrhoid
+保养#bǎoyǎng#take care of one’s health
+抽烟#chōuyān#smoke
+跑步#pǎobù#jog
+沮丧#jǔsàng#depressed
+不对#bùduì#wrong
+残#cán#defective; disabled
+角#jiǎo#corner, angle; horn
+原理#yuánlǐ#principle
+与之#yǔ zhī#with it; which
+即称为#jí chēng wèi#it is called
+受精#shòujīng#be fertilized
+成长#chéngzhǎng#grow up
+自发#zìfā#spontaneous
+真是#zhēnshi#really
+同时#tóngshí#at the same time
+冒险#màoxiǎn#risk(y)
+惩罚#chéngfá#punish
+一番#yī fān#one time 
+怂#sǒng#scared
+内疚#nèijiù#feel guilty
+半天#bàntiān#for quite a while
+满打满算#mǎndǎmǎnsuàn#taking everything into account
+搞不定#gǎo bùdìng#can’t handle it
+温和#wēnhé#gentle; temperate
+抱歉#bàoqiàn#apologize
+妻子#qīzi#wife
+陪护#péihù#protect
+脸色#liǎnsè#expression; complexion
+像话#xiàng huà#plausible
+顾#gù#attend to; look
+明确#míngquè#clear-cut
+得不到#dé bù dào#can’t get
+有效#yǒuxiào#highly effective
+增#zēng#increase 
+塌#tā#collapse; sink
+搞清楚#gǎo qīngchǔ#figure out
+降钙素原#jiàng gài sù yuán#procalcitonin
+原#yuán#original; pro-
+或者#huòzhě#maybe; or
+进去#jìnqù#enter
+脏#zàng#dirty
+免疫#miǎnyì#immunity
+同情#tóngqíng#feel pity
+横冲直撞#héngchōngzhízhuàng#barging around
+撞#zhuàng#collide, bump into##
+影#yǐng#shadow
+收脾气#shōu píqì#calm down, recover one’s temper
+赞同#zàntóng#approve
+吹#chuī#blow
+枕#zhěn#pillow
+露#bō#expose; reveal
+指挥#zhǐhuī#instruction; order
+注意力#zhùyìlì#focus
+联系#liánxì#connect
+保不住#bǎo bu zhù#unable to keep
+磨#mó#grind; rub
+去掉#qùdiào#remove
+粘连#zhānlián#adhered with
+功课#gōngkè#homework
+介入科#jièrù kē#intervene; perform
+双侧#shuāng cè#bilateral
+动脉#dòngmài#artery
+栓塞#shuānsāi#embolization
+规避#guībì#avoid
+隐#yǐn#hidden; conceal
+根据#gēnjù#according; basis
+优#yōu#excellent
+喷#pēn#spray; gush
+寂寞#jìmò#lonely
+重#chóng#serious
+休养#xiūyǎng#recuperate
+血癌#xuè ái#blood cancer
+化疗#huàliáo#(treat with) chemotherapy
+小叔子#xiǎoshūzi#brother-in-law
+重新#chóngxīn#again
+预测#yùcè#predict
+无常#wúcháng#unpredictable ; changeable
+无奈#wúnài#helpless
+尽力#jìnlì#try one’s hardest 
+过不去#guòbuqù#can’t get past/through
+道坎#dào kǎn#hurdle#
+坎#kǎn#ridge
+曲折#qūzhé#tortuous; complicated
+上瘾#shàngyǐn#be addicted to
+提名#tímíng#nominate
+风头#fēngtóu#limelight
+申请#shēnqǐng#application
+未必#wèibì#necessarily
+名单#míngdān#list of names
+恢复#huīfù#recover
+照应#zhàoyìng#look after; take care of each other
+和平#hépíng#peaceful; peace
+融洽#róngqià#harmonious
+跌眼镜#diēyǎnjìng#fall flat on one’s face; eye-popping
+跌#diē#fall down
+眼镜#yǎnjìng#glasses
+汤姆跟杰瑞#tāngmǔ gēn jié ruì#Tom and Jerry
+恐惧#kǒngjù#be frightened
+探究#tànjiù#investigate
+欣赏#xīnshǎng#admire
+独立#dúlì#(declare) independence
+操场#cāochǎng#sports ground
+戒#jiè#give up
+岂#qǐ#how (rhetoric)
+包厢#bāoxiāng#box; loge
+小范围#xiǎo fànwéi#small-scale
+范#fàn# model; limit#
+聚会#jùhuì#gathering; get together
+冲动#chōngdòng#be impulsive
+通常#tōngcháng#normal; usually#
+私密#sīmì#private
+密#mì#secret; dense; close
+亲眼#qīnyǎn#with my own eyes
+包场#bāochǎng#closed party
+相亲#xiāngqīn#blind date 
+派对#pàiduì#party
+场子#chǎngzi#place
+精神#jīngshén#mind
+果然#guǒrán#really, indeed
+墓#mù#grave
+扫#sǎo#sweep; clear away
+忌日#jìrì#death anniversary
+呆#dāi#dumb, dumbstruck
+喂奶#wèinǎi#breastfeeding
+冰箱#bīngxiāng#refrigerator
+千古#qiāngǔ#eternal
+奇观#qíguān#wonder
+侄#zhí#nephew
+丢死人了#diū sǐrénle#What a shame!
+吓死#xià sǐ#scare to death
+凶#xiōng#ferocious, terrible
+嚼#jiáo#chew 
+舌#shé#tongue#
+趁#chèn#take (opportunity)
+趁早#chènzǎo#before it’s too late
+走人#zǒurén#leave
+难听#nántīng#be crude; sound awful
+背后#bèihòu#behind the back
+是非#shìfēi#right and wrong
+撞见#zhuàngjiàn#catch (erwischen)
+嘲笑#cháoxiào#laugh at
+寄#jì#post, mail
+土#tǔ#soil; land
+特产#tèchǎn#specialty
+跑出去#pǎo chūqù#run out of
+谈过恋爱#tánguò liàn-ài#have a relationship
+夸耀#kuāyào#boast
+桶#tǒng#can; bucket
+总归#zǒngguī#after all
+稀罕#xīhan#care about
+倒霉#dǎoméi#unlucky
+让步#ràngbù#make concessions
+逆转#nìzhuǎn#reverse
+外观#wàiguān#appearance
+论坛#lùntán#forum
+几乎#jīhū#almost
+想方设法#xiǎngfāngshèfǎ#move heaven and earth
+蜡黄#làhuáng#sallow (fahl)
+外人#wàirén#outsider; foreigner
+收拾#shōushí#clean up, tidy; punish
+蛾子#ézi#moth
+办公室#bàngōngshì#office
+盒饭#héfàn#lunch box
+重回#chóng huí#return to
+贵干#guìgàn#business
+问候#wènhòu#send regards
+登#dēng#go up; publish; pedal
+三宝殿#sānbǎo diàn#Three Treasure Palace
+殿#diàn#palace
+胆#dǎn#gallbladder
+级别#jíbié#level
+复杂性#fùzá xìng#complexity
+周转#zhōuzhuǎn#turnover
+担负#dānfù#take the burden, take on
+重任#zhòngrèn#important task
+退让#tuìràng#make a concession
+应届#yīngjiè#Freshman
+地#dì#location; land, Earth
+社#shè#society, organization
+臭#chòu#smelly
+猴子#hóuzi#monkey
+狐狸#húlí#fox
+读者#dúzhě#reader
+温润#wēnrùn#gentle
+如#rú#be like
+玉#yù#jade
+名不虚传#míngbù-xūchuán#live up to one‘s reputation
+会议#huìyì#meeting
+面试#miànshì#interview
+众所周知#zhòngsuǒ-zhōuzhī#well-known
+先生#xiānshēng#Mister
+岁月#suìyuè#time; years
+出版#chūbǎn#publish
+册#cè#book
+首#shǒu#first
+印量#yìn liàng#print run
+版#bǎn#edition
+成绩#chéngjī#success
+行业#hángyè#industry
+珠穆朗玛#zhūmùlǎngmǎ#Everest
+峰#fēng#peak
+承#chéng#inherit; be indebted; undertake
+业#yè#industry; job; enterprise
+想必#xiǎngbì#presumably
+感到#gǎndào#feel
+骄傲#jiāo'ào#proud; pride 
+签到#qiāndào#sign in
+势必#shìbì#necessarily; bound to be
+将成为#jiāng chéngwéi#will be, become
+业界#yèjiè#industry
+佳话#jiā huà#beautiful (good) story
+宣传#xuānchuán#propagate, disseminate
+词#cí#word
+书香#shūxiāng#family of scholars
+传承#chuánchéng#pass on, bequeath
+霸#bà#tyrant
+专业#zhuānyè#major; special field of study
+不对口#bùduìkǒu#wrong
+陪伴#péibàn#keep company
+机会#jīhuì#opportunity
+合同#hétóng#contract
+拟#nǐ#draft
+再三#zàisān#again and again
+总算#zǒngsuàn#finally
+数字#shùzì#figure
+创业#chuàngyè#carve out a career; pioneering
+刊物#kānwù#publication; periodical
+文字#wénzì#script; writing
+见解#jiànjiě#opinion
+唯一#wéiyī#only
+编辑#biānjí#editor
+遗憾#yíhàn#regret
+文学#wénxué#literature
+文史#wénshǐ#culture and history
+相关#xiāngguān#related
+硕士#shuòshì#master’s degree
+执着# zhízhuó#perseverance
+认真#rènzhēn#conscientiousness
+热情#rèqíng#enthusiasm, passion 
+纸书#zhǐ shū#paperback
+日薄西山#rìbó-xīshān#approaching the end
+录用#lùyòng#hire, recruit
+拼尽全力#pīn jìn quánlì#try my best
+寻找#xúnzhǎo#look for
+优质#yōuzhì#high-quality
+作品#zuòpǐn#work
+书评#shūpíng#book review
+畅销#chàngxiāo#best-selling
+网媒#wǎng méi#internet media
+冲击#chōngjí#have a big impact on
+实体#shítǐ#physical; entity
+即便#jíbiàn#even if
+诚意#chéngyì#in all sincerity
+类型#lèixíng#type
+当中#dàng zhōng#among
+保底#bǎodǐ#guaranteed
+销售#xiāoshòu#sell; sales
+版税#bǎnshuì#royalties
+水涨船高#shuǐzhǎngchuángāo#increase (the flood raises all boats)
+船#chuán#boat
+遇见#yùjiàn#meet
+愤怒#fènnù#angry
+待遇#dàiyù#treat
+加油#jiāyóu#make more effort
+正#zhèng#straight
+不愧#bùkuì#worthy of
+无缘#wúyuán#for no reason
+无故#wúgù#for no reason at all
+故#gù#reason
+参考#cānkǎo#reference 
+书目#shūmù#catalogue
+杂#zá#mixed
+自己#zìjǐ#oneself
+随意#suíyì#casual
+记#jì#record; mark; remember
+账#zhàng#account
+翻脸#fānliǎn#change mood; turn face
+拐卖#guǎimài#abduct and sell
+惨败#cǎnbài#suffer a disastrous defeat
+滚蛋#gǔndàn#fuck off
+戏精#xì jīng#actor; drama queen
+巧#qiǎo#coincidence
+淘#táo#wash; buy
+萌#méng#cute (niedlich)
+哟#yō#oh
+撒泼#sāpō#make a scene
+打滚#dǎgǔn#roll over
+嗓子#sǎngzi#throat, voice
+主编#zhǔbiān#chief editor
+完璧归赵#wánbìguīzhào#return in full (return the jade disc to the state of Zhao in one piece)
+璧#bì#B-disk (jade)
+归#guī#return
+文件#wénjiàn#folder; document
+何方#héfāng#where
+末路#mòlù#(dead) end; fate
+悲歌#bēigē#sad song
+没落#mòluò#decline
+贵族#guìzú#aristocrat
+杂志#zázhì#magazine
+收集#shōují#collect
+大概#dàgài#perhaps 
+亲笔#qīnbǐ#written personally
+手书#shǒu shū#handwritten document
+苦口婆心#kǔkǒupóxīn#do one’s best to persuade
+迷途#mítú#lose one’s way
+返#fǎn#return
+方便#fāngbiàn#convenient
+收拾#shōushí#tidy; repair; punish
+见面#jiànmiàn#meet
+解约#jiěyuē#termination (contract)
+违约#wéiyuē#break a contract
+赔付#péifù#pay compensation
+代表作#dàibiǎozuò#masterpiece
+版权#bǎnquán#copyright
+期限#qíxiàn#time limit, deadline
+到期#dào qí#expire
+停止#tíngzhǐ#stop
+打球#dǎqiú#play with a ball
+滑雪#huáxuě#ski
+明目张胆#míngmùzhāngdǎn#brazenly (dreist)
+撬#qiào#break up
+光彩#guāngcǎi#radiance; glorious
+艘#sōu#[ship, boat]
+开发#kāifā#develop; exploit
+与其#yǔqí#rather than
+责怪#zéguài#blame; accuse
+不如#bùrú#why not, what about
+跳舞#tiàowǔ#dance
+预#yù#in advance
+秋天#tiāncái#autumn
+上市#shàngshì#launch; appear on the market
+期时间#qíshíjiān#term time; duration
+稿#gǎo#draft
+交#jiāo#hand in
+日期#rìqí#date
+顺延#shùnyán#postpone
+约定#yuēdìng#state; establish
+混不下去#hùn bù xiàqù#can’t get along
+混#hùn#aimless
+报到#bàodào#report
+试用#shìyòng#trial; try out
+月薪#yuèxīn#monthly salary
+勤#qín#attendance; duty
+补#bǔ#supplement
+超#chāo#super
+袅#niǎo#delicate
+闲人#xiánrén#layabout
+金融#jīnróng#finance
+融#róng#melt; blend; circulate
+非要#fēi yào#have to
+白眼#báiyǎn#disdainful look
+唱衰#chàng shuāi#bad-mouthing
+衰#shuāi#decline
+自家#zìjiā#own
+体面#tǐmiàn#decent; dignity
+安稳#ānwěn#stable; steady
+寄#jì#post, mail
+没收#mòshōu#confiscate
+金库#jīnkù#treasury
+库#kù#warehouse
+早日#zǎorì#soon
+认清#rènqīng#see clearly; realize
+起跑#qǐpǎo#start
+终点#zhōngdiǎn#finish; terminus
+偷懒#tōulǎn#be lazy
+通#tòng#[report]
+书友会#shū yǒu huì#book club
+惊喜#jīngxǐ#be pleasantly surprised
+看法#kànfǎ#opinion
+彼#bǐ#the other side
+高峰#gāofēng#summit
+君#jūn#Mr.; monarch
+近#jìn#close
+活下来#huó xiàlái#survive
+略#lüè#slightly; summary; plan
+风霜#fēngshuāng#suffer hardship
+霜#shuāng#frost
+仍#réng#still; remain, occur frequently
+碗#wǎn#bowl
+淹#yān#drown; flood
+犀利#xīlì#penetrating
+书迷#shūmí#bibliophile
+状态#zhuàngtài#status
+街角#jiējiǎo#street corner
+内容#nèiróng#content
+售#shòu#sell
+忠#zhōng#loyal
+失望#shīwàng#disappointed
+人气#rénqì#popular; popularity
+处女作#chǔnǚzuò#debutante work
+岂止#qǐzhǐ#more than
+古怪#gǔguài#quirky, grotesque
+幽默#yōumò#humour
+古代#gǔdài#antiquity
+神话#shénhuà#myth
+信手拈来#xìnshǒuniānlái#at your fingertips
+拈#niān#take with one’s fingers
+既#jì#already
+传统#chuántǒng#traditional
+韵味#yùnwèi#lasting appeal; charm
+滤镜#lǜ jìng#filter
+滤#lǜ#filter
+镜#jìng#mirror
+多么#duōme#how
+眼光#yǎnguāng#vision; perspective
+忍痛#rěntòng#reluctantly
+割爱#gē'ài#part with your love
+套近乎#tàojìnhū#closer
+拉#lā#pull, drag
+假#jiǎ#false 
+高兴#gāoxìng#happy; enjoy
+心不在焉#xīnbùzàiyān#be absent-minded
+旖#yǐ#charming
+闻#wén#hear; smell; news
+录#lù#record; copy 
+打击#dǎjí#crack down
+你这比天#nǐ zhè bǐ tiān#your amazing (better than the sky)
+自信#zìxìn#self-confident
+奇葩#qípā#weird; exotic
+啰嗦#luōsuo#wordy; long-winded
+忍住#rěnzhù#hold back
+背景#bèijǐng#background; scenery
+介绍#jièshào#introduction
+黄金#huángjīn#gold
+法则#fǎzé#law
+直观#zhíguān#intuitive
+退休#tuìxiū#retire
+主题#zhǔtí#subject; theme
+奔#bēn#speed; hurry; flee
+抛出#pāochū#throw out
+悬念#xuánniàn#suspense
+与#yǔ#with; and; give
+诚#chéng#honest; really
+丰富#fēngfù#abundant
+进步#jìnbù#improvement
+空间#kōngjiān#space
+创作#chuàngzuò#create; work
+瓶颈#píngjǐng#bottleneck
+炫耀#xuànyào#show off; proud
+耀#yào#boast of; radiance
+声音#shēngyīn#voice; sound
+马尾#mǎwěi#ponytail
+辫#biàn#braid (geflochten)
+衬衫#chènshān#blouse
+肩包#jiān bāo#backpack
+书架#shūjià#book shelf
+中间#zhōngjiān#middle
+过气#guòqì#outdated
+咸#xián#salty
+翻身#fānshēn#turn over
+动物园#dòngwùyuán#zoo
+经典#jīngdiǎn#classics
+显眼#xiǎnyǎn#noticeable
+拜托#bàituō#please
+花瓶#huāpíng#vase
+雏菊#chújú#daisy
+一模一样#yīmúyīyàng#look exactly the same
+瓶子#píngzi#blottle
+反映#fǎnyìng#reflection
+反射#fǎnshè#reflection (2)
+窗子#chuāngzi#window
+关注#guānzhù#follow
+动态#dòngtài#developments
+沉寂#chénjì#quiet
+罢#bà#stop, finish; give up
+销量#xiāoliàng#sales
+连创新低# lián chuàng xīndī#consecutive record lows
+古董#gǔdǒng#antique
+起伏#qǐfú#up and down; undulate 
+看上#kàn shàng#fall for; fall in love
+想法#xiǎngfǎ#idea; opinion
+连环画#liánhuánhuà#comic
+满意#mǎnyì#be satisfied
+重#chóng#again; repeat
+美编#měi biān#art director
+画家#huàjiā#painter
+除了 以外#chúle yǐwài#besides
+承担起#chéngdān qǐ#take on
+月光#yuèguāng#moonlight
+组稿#zǔ gǎo#compile; draft 
+星轨#xīng guǐ#Star Treck
+摇篮#yáolán#cradle
+新兴#xīnxīng#newly emerging
+赛道#sàidào#track
+假条#jiàtiáo#leave permit
+批#pī#approve
+跑不掉的#pǎo bù diào de#inescapable
+难为#nánwéi#embarass
+手眼通天#shǒuyǎn tōngtiān#be good at what you do
+伸到#shēn dào#reach out
+来访#láifǎng#visit
+接待#jiēdài#receive
+投稿#tóugǎo#submit a manuscript
+投#tóu#throw; put; cast
+访客#fǎngkè#visitor; guest
+一言难尽了#yīyánnánjìnle#beyond words 
+言#yán#speak; speech; words
+诺贝尔#nuò bèi'ěr#Nobel
+化学#huàxué#chemistry
+物理#wùlǐ#physics
+例外#lìwài#be an exception
+波澜#bōlán#waves
+波涛#bōtāo#billow (Woge)
+戏#xì#opera
+戏曲#xìqǔ#Chinese opera
+管用#guǎnyòng#effective; useful
+热心#rèxīn#warm-hearted
+不过#bùguò#but; only
+花枝#huāzhī#flowering branch
+看重#kànzhòng#value; promising
+下面#xiàmiàn#next; lower levels
+顺心#shùnxīn#satisfactory
+舒心#shūxīn#comfortable
+现实#xiànshí#reality
+深不见底#shēn bù jiàn dǐ#bottomless
+马里亚纳#mǎlǐyǎnà#Mariana
+海沟#hǎigōu#trench (deep sea)
+风平浪静#fēngpíng-làngjìng#calm
+暗流#ànliú#undercurrent
+涌#yǒng#emerge
+拖把#tuōbǎ#mop
+魁地奇#kuídeqí#Quidditch
+比赛#bǐsài#match
+干净#gānjìng#clean; clear
+眼睛#yǎnjīng#eye
+初次#chūcì#first time
+礼遇#lǐyù#courtesy; give special treatment
+指教#zhǐjiào#give advice
+忠实#zhōngshí#loyal
+创刊#chuàngkān#start publication
+之外#zhī wài#apart from
+下滑#xiàhuá#descent
+趋势#qūshì#trend
+明显#míngxiǎn#obvious
+潜力#qiánlì#potential
+自从#zìcóng#since
+接连#jiēlián#in a row
+关系#guānxì#impact on; relation; reason
+饭碗#fànwǎn#job; rice bowel
+唤醒#huànxǐng#wake up
+沉睡#chénshuì#fast asleep
+大师#dàshī#master
+一手#yīshǒu#skill
+发掘#fājué#unearth
+掘#jué:#dig
+转正#zhuǎnzhèng#become a permanent member
+便宜#piányí#cheap; let off lightly
+改邪归正#gǎixiéguīzhèng#return to the right path
+邪#xié#evil; abnormal; misfortune
+贬#biǎn#reduce; belittle
+颠#diān#fall; jolt
+眼神#yǎnshén#eyesight
+眼科#yǎnkē#ophthalmology
+招惹#zhāorě#provoke
+宣读#xuāndú#reading
+帽子#màozi#hat; label
+加印#jiā yìn#reprint
+特地#tèdì#especially
+推出#tuīchū#bring out
+特别#tèbié#peculiar; specially
+挪#nuó#move
+妖魔#yāomó#monster
+鬼怪#guǐguài#demons
+袋子#dàizi#bag
+栋#dòng#[building]
+棒#bàng#great; awesome
+消息#xiāoxī#message
+冒昧#màomèi#dare; take the liberty
+独生子#dúshēngzǐ#only child
+娇气#jiāoqì#pettiness
+和气#héqì#kind; polite
+女士#nǚshì#Ms.
+对象#duìxiàng#partner
+好奇#hàoqí#curious
+提#tí#mention
+唐突#tángtú#brusque, abrupt
+试探#shìtàn#sound out
+剩女#shèngnǚ#left-over woman
+贬低#biǎndī#vilification
+等同#děngtóng#equate
+商场#shāngchǎng#mall
+过季#guòjì#out-of-season
+打折#dǎzhé#discount
+隔夜#géyè#overnight
+超市#chāoshì#supermarket
+保质期#bǎozhìqī#expiration date
+酸奶#suānnǎi#yoghurt
+之后#zhīhòu#after
+呈#chéng#assume; present
+断崖#duànyá#cliff; precipice
+挑剔#tiāotì#picky
+轻飘飘#qīngpiāopiāo#light-hearted
+飘飘#piāopiāo#flutter
+锋利#fēnglì#sharp, cutting
+剪刀#jiǎndāo#scissors
+自尊#zìzūn#self-respect
+稀巴烂#xībālàn#shred; smash
+烂#làn#soft; worn-out; be rotten
+仍#réng#still; remain
+事物#shìwù#thing
+物充#chōngmǎn#full of
+向往#xiàngwǎng#yearn
+热情#rèqíng#passion; enthusiastic
+挑拣#tiāojiǎn#pick
+拥抱#yǒngbào#embrace
+温暖#wēnnuǎn#warm
+发光#fāguāng#glowing with health
+少女#shàonǚ#young girl
+主管#zhǔguǎn#responsible
+员工#yuángōng#staff
+简历#jiǎnlì#resume, CV
+确认#quèrèn#confirm
+入职#rùzhí#(work) entry
+用品#yòngpǐn#goods
+仓库#cāngkù#warehouse
+设计#shèjì#design
+竟然#jìngrán#even (sogar)
+恋情#liànqíng#romantic love
+昧#mèi#not knowing
+砖#zhuān#brick
+校长#xiàozhǎng#principal
+谈恋爱#tán liàn-ài#be in love
+初恋#chūliàn#first love
+保驾#bǎojià#escort; protect
+护航#hùháng#escort
+发福#fāfú#put on weight
+劳#láo#trouble; work
+费心#fèixīn#mind doing
+快递#kuàidì#express delivery
+熬夜#áoyè#stay up late
+赶#gǎn#catch
+图#tú#picture; plan; map
+扣#kòu#deduct; put upside down
+房贷#fángdài#mortgage
+接到#jiēdào#receive
+市场部#shìchǎngbù#market department
+炸弹#zhàdàn#bomb
+交往#jiāowǎng#have contact
+战斗#zhàndòu#fight
+领证#lǐngzhèng#to obtain a certificate or license etc; (PRC) to obtain a marriage license; to marry
+差#chà#being short of
+婚纱#hūnshā#wedding dress
+办#bàn#handle; set up
+准生证#zhǔnshēngzhèng#birth certificate; certificate of Permission for Birth
+幼儿园#yòu-éryuán#kindergarten
+幼#yòu#young; child
+战场#zhànchǎng#battle field
+速决#sùjué#quick decision
+钓#diào#fish
+龟#guī#turtle
+游击战#yóujízhàn#guerrilla warfare
+击#jí#strike; attack
+晚婚#wǎnhūn#late marriage
+眨眼#zhǎyǎn#blink
+咽气#yànqì#die
+婚恋#hūnliàn#marriage and love
+既#jì#already
+潇洒#xiāosǎ#stylish (natural and unaffected)
+执事#zhíshì#deacon
+人物#rénwù#figure
+趁#chèn#take (opportunity)
+追星 ##
+迷#mí#become obsessed with; be lost
+迷恋#míliàn#obsession
+次元# #
+实际#shíjì#real; reality
+粉红#fěnhóng#pink
+粉#fěn#powder; pulverize; pink
+孤老#gūlǎo#old lonely person
+终生#zhōngshēng#one’s whole life
+zhízhuó yú#zhízhuó yú#obsessed with
+美少男#měi shàonán#pretty boy
+德#dé#kindness; morality; German
+讨厌#tǎoyàn#hate; nasty
+种#zhǒng#plant
+豆#dòu#bean
+座机#zuòjī#landline
+响#xiǎng#sound; loud
+吵#chǎo#noisy
+地球#dìqiú#the Earth
+引力#yǐnlì#gravitation
+断#duàn#break
+客户#kèhù#customer
+财路#cái lù#way of life; road to riches
+财#cái#wealth
+闪现#shǎnxiàn#flash
+奇妙#qímiào#wonderful
+装饰#zhuāngshì#decoration
+学姐#xuéjiě#Miss
+样片#yàngpiàn#sample; footage
+样#yàng#sample; style; type
+片#piàn#piece; slice; incomplete; brief
+承受#chéngshòu#bear
+怒火#nùhuǒ#fury
+霸王#bàwáng#despot
+霸王龙#bàwáng lóng#Tyrannosaurus rex
+喷火#pēnhuǒ#fire-breathing
+临时#línshí#temporary
+触及#chùjí#touch
+解约#jiěyuē#cancel a contract
+不巧#bùqiǎo#unfortunately
+灾难#zāinàn#disaster
+灾#zāi#disaster; misfortune
+改天#gǎitiān#one day, sometime
+公园#gōngyuán#park
+圆#yuán#circle; round; justify
+半径#bànjìng#radius
+报刊#bàokān#periodicals and newspapers
+报刊亭#bàokān tíng#newsstand
+公交#gōngjiāo#public transport
+站牌#zhàn pái#stop sign
+贴#tiē#post
+寻#xún#search
+启示#qǐshì#message, notice; enlightenment
+结论#jiélùn#conclusion
+杂志#zázhì#magazine
+做完#zuòwán#finish
+宠物#chǒngwù#pet
+罚#fá#punish
+麻烦#máfan#trouble
+摄影师#shèyǐngshī#photographer
+抽不开身#chōu bù kāi shēn#unable get away from work
+跑腿#pǎotuǐ#run errands
+行政#xíngzhèng#administration
+实习生#shíxíshēng#intern
+同意#tóngyì#approval
+开会#kāihuì#(have a) meeting
+代行#dàixíng#take over (authority)
+职权#zhíquán#authority
+全体#quántǐ#everyone
+无所不能#wúsuǒ-bùnéng#omnipotent
+设计师#shèjìshī#designer
+抽出#chōuchū#take (time); take out
+副教授#fùjiàoshòu#associate professor
+向日葵#xiàngrìkuí#sunflower
+葵#kuí#large flower
+同学#tóngxué#fellow student
+修#xiū#study; repair
+美术#měishù#fine arts; painting
+鉴赏#jiànshǎng#appreciation
+保留#bǎoliú#preserve; hold back; retain
+教授#jiàoshòu#professor; lecture
+办公室#bàngōngshì#office
+招呼#zhāohū#call, greet
+龙凤胎#lóngfèng tāi#twins (girl and boy)
+个性#gèxìng#personality
+差异#chāyì#difference
+严厉#yánlì#severe
+翻身#fānshēn#turn over; emancipate
+穿越#chuānyuè#pass through
+外星#wàixīng#alien
+怪咖#guài kā#freak, weirdo
+南极#nánjí#Antarctica
+企鹅#qì-é#penguin
+基地#jīdì#base
+备胎#bèitāi#spare tire
+明星#míngxīng#star
+社团#shètuán#organization; club
+从头#cóngtóu#from the beginning
+达芬奇#dá fēn qí#da Vinci
+交谊#jiāoyì#friendship
+舞#wǔ#dance 
+舞伴#wǔbàn#dance partner
+运气#yùnqì#lucky; luck
+跳一曲#tiào yī qū#dance
+趟#tàng; [action; Fahrt]#
+打卡#dǎkǎ#clock in
+证明#zhèngmíng#certificate
+放荡不羁#fàngdàng-bùjī#bohemian; flimsy
+开除#kāichú#fire (job)
+强#qiáng#able, strong; stubborn
+独立#dúlì#be independent
+少年#shàonián#young man
+臣#chén#office-holder
+妾#qiè#concubine
+金牌#jīnpái#gold medal
+正好#zhènghǎo#just
+办事#bànshì#deal with
+稳妥#wěntuǒ#safe
+旷工#kuànggōng#absenteeism
+规章#guīzhāng#regulations
+超过#chāoguò#exceed
+谈话#tánhuà#chat
+凶#xiōng#ferocious; terribly
+要死#yàosǐ#extremely
+一板一眼#yībǎnyīyǎn#meticulous
+较真#jiàozhēn#serious
+进入#jìnrù#enter; reach; get inside
+样板#yàngbǎn#model; sample
+拍照#pāizhào#take a picture
+协助#xiézhù#help
+布景#bùjǐng#set; setting
+装修#zhuāngxiū#fit out
+添加#tiānjiā#add
+拍摄#pāishè#shoot
+广告宣传片#guǎnggào xuānchuán piàn#advertising video
+彩带#cǎidài#ribbon; garland
+犯法#fànfǎ#break the law
+风俗#fēngsú#custom
+吉利#jílì#lucky
+修掉#xiū diào#edit (photo)
+复原#fùyuán#restore; recover
+没完#méiwán#not let drop; be unfinished
+上司#shàngsi#superior
+假惺惺#jiǎxīngxīng#hypocritical
+扭#niǔ#twist; turn around
+鞠躬#jūgōng#bow
+打死#dǎsǐ#kill
+欲#yù#desire, want
+祖宗#zǔzōng#ancestors
+古板#gǔbǎn#fogey
+按摩#ànmó#massage
+小弟#xiǎodì#little brother
+浑小子#hún xiǎozi#bastard
+装修#zhuāngxiū#decoration; renovation
+针对#zhēnduì#aim at, be aimed at
+人家#rénjiā#folk; other people
+帮凶#bāngxiōng#accomplice; accessory
+未婚妻#wèihūnqī#fiancée
+宁愿#nìngyuàn#rather
+发福#fǎfú#get fat (sign of prosperity)
+福#fú#good fortune
+迷之#mízhī#mysterious; fascinating
+掉落#diàoluò#fall down
+逃#táo#skip (class)
+班#bān#class
+志向#zhìxiàng#ambition
+探险#tànxiǎn#explore
+探险家#tànxiǎnjiā#explorer
+砖头#zhuāntóu#brick
+神经病#shénjīngbìng#psychopath; crazy
+犬夜叉#quǎnyèchā#Inuyasha
+缠#chán#twine (einwickeln)
+玩伴#wánbàn#playmate
+青春#qīngchūn#youth
+猝不及防cùbùjífáng#caught off guard#
+心动#xīndòng#heart movement
+选中#xuǎnzhōng#pick and choose
+舍shě#abandon; give#
+主角#zhǔjiǎo#lead role
+灵魂#línghún#soul, spirit
+附体#fù tǐ#possess
+不懂事#bù dǒngshì#immature
+刁蛮#diāomán#bratty
+孽#niè#sin
+缘#yuán#fate
+亏着#kuīzhe#thanks
+刚一##
+班长#bānzhǎng#class representative
+去要#qù yào#ask for
+顺眼#shùnyǎn#attractive
+体质#tǐzhí#physique, constitution
+丑#chǒu#ugly
+前头#qiántou#front
+生态#shēngtài#ecology
+抱走#bào zǒu#carry away, take away
+车站#chēzhàn#bus stop
+站已#tiē shàng#post; fix
+表示#biǎoshì#mean, indicate; express
+刻#kè#engrave
+重金#zhòngjīn#heavy money
+酬谢#chóuxiè#reward; repay
+杂志社#zázhìshè#magazine publisher
+海豹#hǎibào#seals
+帝#dì#God; emperor; imperialism
+喜帖#xǐtiě#wedding invitation
+帖#tiě#note; obedient
+亲手#qīnshǒu#with my own hands
+仗#zhàng#rely on; be armed; battle, weapons
+远方#yuǎnfāng#afar
+星辰#xīngchén#star
+大海#dàhǎi#ocean
+而立#érlì#reach
+教室#jiàoshì#classroom
+当真#dàngzhēn#take seriously; serious; really
+之约#zhīyuē#appointment
+傻瓜#shǎguā#fool
+伴娘#bànniáng#bridesmaid
+大喜#dàxǐ#big day
+积德#jīdé#do good deeds
+行善#xíngshàn#do good deeds (2)
+航空#hángkōng#fly; airline
+广告#guǎnggào#advertising
+企划#qǐhuà#plan
+机型#jīxíng#aircraft
+载#zài#carry; load; convey 
+卖力#màilì#work hard; to do it’s best
+航#háng#boat; sail; fly
+稍#shāo#a little; a moment
+甜蜜#tiánmì#happy; honigsüß
+新娘#kāixīn#bride
+纯粹#chúncuì#pure; purely
+拒绝#jùjué#refuse
+牵个手#qiān gè shǒu#hold hands
+牵#qiān#pull; involve
+天亮#tiānliàng#dawn
+揣#chuāi#conceal in one‘s clothes
+兔子#tùzǐ#rabbit
+扑通#pūtōng#Plumps
+闪闪#shǎnshǎn#sparkling; shining
+泰迪#tàidí#Teddy
+之所以#zhī suǒyǐ#the reason why
+订立#dìnglì#establish
+间约#yuēdìng#agreement
+合约#héyuē#contract
+种种#zhǒngzhǒng#of all kinds
+遵守#zūnshǒu#observe
+违反#wéifǎn#go against
+甲#jiǎ#first
+为所欲为#wéisuǒyùwéi#do just as one pleases
+借口#jièkǒu#excuse
+身为#shēn wèi#as 
+概念#gàiniàn#concept 
+解除#jiěchú#get rid of; break off
+明智#míngzhì#sensible, wise
+之举#zhī jǔ#move#
+帮忙#bāngmáng#help
+理由#lǐyóu#reason; argument
+搞笑#gǎoxiào#joke; funny
+传说#chuánshuō#legend
+裙子#qúnzi#skirt
+前台#qiántái#front desk, reception
+谈场恋爱#tán chǎng liàn'ài#fall in love
+招#zhāo#trick
+威胁#wēixié#threaten
+春梦#chūnmèng#illusion#
+小子# xiǎozi#boy; kid 
+邪念#xiéniàn#evil thoughts
+闷#mèn#stuffy; shut oneself in
+幸运#xìngyùn#lucky; good luck
+倒霉#dǎoméi#unlucky#
+剧#jù#drama
+狗血#gǒu xuè#melodramatic (dog blood)
+满腔#mǎnqiāng#filled with
+热血#rèxuè#enthusiasm
+清醒#qīngxǐng#sober
+糊#hú#cream, paste; muddy
+过日子#guò rìzi#live
+闪亮#shǎn liàng#shiny, brilliant#
+防腐#fángfǔ#anticorrosive
+过期#guòqí#expire
+剂#jì#preparation; dose
+保质#bǎo zhì#shelf life, storage life#
+算数#suànshù#count
+秘密#mìmì#secret
+滚出去#gǔn chūqù#get the hell out#
+发火#fāhuǒ#catch fire; lose one’s temper
+欲求#yùqiú#desire
+不满#bùmǎn#dissatisfied
+爷#yé#grandfahter, dad; master; God
+煎#jiān#pan-fried
+焦#jiāo#burnt; dry; agitated
+留神#liúshén#be on the alert
+分#fēn#assign
+职称#zhíchēng#professional title
+专#zhuān#concentrate; dominate; specialize
+拱#gǒng#join one’s hand together; push; encircle
+猪#zhū#pig
+脑袋#nǎodai#head
+不灵光#bù língguāng#not working well
+棵#kē#[tree; whole plant]
+刚好#gānghǎo#just right; luckily
+录下来#lù xiàlái#record#
+变态#biàntài#pervert; abnormal
+凭#píng#no matter
+跪#guì#kneel
+早晨#zǎochén#morning
+一身#yīshēn#all over the body
+闻见#wén jiàn#smell
+酒量#jiǔliàng#alcohol tolerance
+断片#duànpiàn#segment, piece; black out 
+坦然#tǎnrán#calm
+闲聊#xiánliáo#chat
+干活#gàn huó#get to work
+醉#zuì#drunk; drink too much
+答应#dāyìng#promise
+台词#táicí#text (theater)
+趁人之危#chèn rén zhī wēi#take advantage of other’s difficulties
+酒后乱言#jiǔ hòu luàn yán#drunken talk
+打印机#dǎyìnjī#printer
+彩#cǎi#color
+夜店#yèdiàn#night club
+强调#qiángdiào#stress (betonen)
+缓#huǎn#delay; slow, relaxed
+观念#guānniàn#concept; sense
+轻巧#qīngqiǎo#simple; handy; dexterous
+策划#cèhuà#design; planning
+你是嫌#nǐ shì xián#are you suspicious; do you think
+知名度#zhīmíngdù#reputation
+一度#yīdù#for a time
+准#zhǔn#exact; correct
+艰难#jiānnán#hard
+整体#zhěngtǐ#whole
+包装#bāozhuāng#package
+主攻# zhǔgōng#main attack 
+脱颖而出#tuōyǐng'érchū#come to the fore
+颖#yǐng#intelligent
+失误#shīwù#fault
+添#tiān#add; give birth
+低级#dījí#inferior (Niedrigkeit)
+犯#fàn#violate; attack; criminal
+对方#duìfāng#other side
+准时#zhǔnshí#punctual
+克制#kèzhì#restrain
+例行#lìxíng#routine
+考勤#kǎoqín#check attendance
+惨不忍睹#cǎnbùrěndǔ#too horrible to look at
+印象#yìnxiàng#impression (Eindruck)
+扎#zhā#plunge into
+马桶#mǎtǒng#toilet bowl
+保守#bǎoshǒu#conserve, keep
+交换#jiāohuàn#exchange
+遛#liú#walk; take a stroll
+夹#jiā#pinch (einklemmen)
+壁咚#bì dōng#push to the wall
+吻#wěn#kiss
+补妆#bǔ zhuāng#touch up makeup
+挣脱#zhēngtuō#break free
+狭窄#xiázhǎi#narrow
+交际#jiāojì#socialize
+长辈#zhǎngbèi#elder
+站住#zhànzhù#stand firm; halt, wait
+下属#xiàshǔ#subordinate
+劳动#láodòng#work; labor
+当#dāng#act as
+君子#jūnzǐ#gentleman
+驷马难追#sì mǎ nán zhuī#what’s said can’t be unsaid
+瞎胡闹#xiā húnào#fooling around
+贵妇#guì fù#noblewomen
+缠#chán#pester; twine
+非分#fēifèn#inappropriate
+之想#zhī xiǎng#thought
+发型#fǎxíng#hair cut
+散步#sànbù#go for a stroll
+悬赏#xuánshǎng#reward
+账号#zhànghào#account number
+物归原主#wùguī yuánzhǔ#return to the owner
+总得#zǒngdé#must
+亲子#qīnzǐ#parents and children
+鉴定#jiàndìng#expertise
+嫌少#xián shǎo#too little
+炖#dùn#stew
+桃#táo#peach
+正义#zhèngyì#justice
+爆棚#bàopéng#burst
+爆#bào#explode
+敬#jìng#respectful; respect
+贪婪#tānlán#greedy
+计策#jìcè#strategy
+心头#xīntóu#mind
+之惑#zhīhuò#confusion
+太子#tàizǐ#crown prince
+殿下#diànxià#Your Highness
+衣架#yījià#hanger
+房间#fángjiān#room
+女友#nǚyǒu#girlfriend
+毁#huǐ#destroy
+            `;
+
+    // Function to process the file content and search for a query
+    function processFile(content, query) {
+        const lines = content.trim().split('\n');
+        const results = [];
+
+        lines.forEach(line => {
+            const [chinese, pinyin, english] = line.split('#');
+            const normalizedPinyin = pinyin
+                .replace(/á|à|ā|ǎ/g, 'a')
+                .replace(/é|è|ē|ě/g, 'e')
+                .replace(/í|ì|ī|ǐ/g, 'i')
+                .replace(/ó|ò|ō|ǒ/g, 'o')
+                .replace(/ú|ù|ū|ǔ/g, 'u');
+
+            if (normalizedPinyin.includes(query)) {
+                results.push({ chinese, pinyin, english });
+            }
+        });
+
+        return results;
+    }
+
+    // Function to escape HTML
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    // Function to display the search results
+    function displayResults(query) {
+        const results = processFile(pgContent, query);
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = ''; // Clear previous results
+
+        if (results.length === 0) {
+            container.innerHTML = '<p>No results found.</p>';
+        } else {
+            results.forEach(result => {
+                const resultDiv = document.createElement('div');
+                resultDiv.innerHTML = `${escapeHTML(result.chinese)} | ${escapeHTML(result.pinyin)} | ${escapeHTML(result.english)}`;
+                container.appendChild(resultDiv);
+                container.appendChild(document.createElement('br')); // Add a line break after each entry
+            });
+        }
+    }
+
+    // Get the query parameters from the URL and display results if any
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('kette')) {
+        displayResults(params.get('kette'));
+    }
+
+    // Call the function to generate links
+    generateLinks(fileContent);
+});
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Discover Chinese Syllables</h1>
+    </div>
+    <div class="container">
+        <div id="linksContainer"></div>
+        <div id="resultsContainer"></div>
+    </div>
+    <div class="footer">
+        Copyright 2024 by <a href="https://hiv.net/" target="bsk">BSK</a> and the Chinese Dreamteam from Cagliari.
+    </div>
+</body>
+</html>
